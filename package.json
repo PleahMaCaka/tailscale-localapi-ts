@@ -1,0 +1,30 @@
+{
+  "name": "tailscale-localapi-ts",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.11",
+    "@tsconfig/bun": "^1.0.10",
+    "@types/bun": "latest"
+  },
+  "description": "TypeScript client for Tailscale LocalAPI",
+  "keywords": [
+    "tailscale",
+    "localapi",
+    "vpn",
+    "typescript"
+  ],
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "test": "bun --bun test tests/safe/*.test.ts",
+    "test:risky": "bun --bun test tests/risky/*.test.ts",
+    "test:all": "bun --bun test tests/**/*.test.ts",
+    "test:ci": "bun --bun test tests/**/*.test.ts",
+    "format": "biome format --write .",
+    "format:check": "biome format ."
+  },
+  "type": "module"
+}
