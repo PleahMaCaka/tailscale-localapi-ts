@@ -40,10 +40,6 @@ function getDefaultSocketPath(): string {
   return "/var/run/tailscale/tailscaled.sock"
 }
 
-function getDefaultPort(): number {
-  return 41112
-}
-
 function getSocketPath(): string {
   const envSocket =
     process.env.TAILSCALE_LOCALAPI_SOCKET || process.env.TS_LOCALAPI_SOCKET
