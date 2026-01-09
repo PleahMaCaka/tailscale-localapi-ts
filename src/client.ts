@@ -43,9 +43,7 @@ function getDefaultSocketPath(): string {
 function getSocketPath(): string {
   const envSocket =
     process.env.TAILSCALE_LOCALAPI_SOCKET || process.env.TS_LOCALAPI_SOCKET
-  if (envSocket) {
-    return envSocket
-  }
+  if (envSocket) return envSocket
   return getDefaultSocketPath()
 }
 
@@ -57,15 +55,68 @@ function isDarwin(): boolean {
   return process.platform === "darwin"
 }
 
+function toCamelCase(key: string): string {
+  const words = key.match(/[A-Z]+(?=[A-Z][a-z])|[A-Z]+[a-z]*|[a-z]+|\d+/g)
+  if (!words) return key
+  return words
+    .map((w, i) => {
+      const lower = w.toLowerCase()
+      if (i === 0) return lower
+      return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
+    })
+    .join("")
+}
+
+const ACRONYMS: Record<string, string> = {
+  id: "ID",
+  ip: "IP",
+  ips: "IPs",
+  dns: "DNS",
+  os: "OS",
+  lan: "LAN",
+  api: "API",
+  url: "URL",
+  ssh: "SSH",
+  derp: "DERP",
+  stun: "STUN",
+  ipv4: "IPv4",
+  ipv6: "IPv6",
+  so: "SO",
+  somark: "SOMark",
+  tun: "TUN"
+}
+
+function toPascalCase(key: string): string {
+  const words = key.match(/[A-Z]+(?=[A-Z][a-z])|[A-Z]?[a-z]+|\d+/g)
+  if (!words) return key.charAt(0).toUpperCase() + key.slice(1)
+  return words
+    .map(w => {
+      const lw = w.toLowerCase()
+      if (ACRONYMS[lw]) return ACRONYMS[lw]
+      return w.charAt(0).toUpperCase() + w.slice(1)
+    })
+    .join("")
+}
+
+function camelize(obj: unknown): unknown {
+  if (Array.isArray(obj)) return obj.map(v => camelize(v))
+  if (obj && typeof obj === "object") {
+    const out: Record<string, unknown> = {}
+    for (const [k, v] of Object.entries(obj as Record<string, unknown>)) {
+      out[toCamelCase(k)] = camelize(v)
+    }
+    return out
+  }
+  return obj
+}
+
 async function runCLI(
   method: string,
   path: string,
   body?: unknown
 ): Promise<unknown> {
   const args = ["debug", "localapi", method, `${API_VERSION}/${path}`]
-  if (body) {
-    args.push(JSON.stringify(body))
-  }
+  if (body) args.push(JSON.stringify(body))
 
   const process = Bun.spawn(["tailscale", ...args], {
     stdout: "pipe",
@@ -74,9 +125,7 @@ async function runCLI(
 
   const output = await new Response(process.stdout).text()
 
-  if (output.trim() === "") {
-    throw new Error("Empty response from CLI")
-  }
+  if (output.trim() === "") throw new Error("Empty response from CLI")
 
   try {
     return JSON.parse(output)
@@ -94,11 +143,8 @@ export class TailscaleLocalAPI {
     this.socketPath = options.socketPath || getSocketPath()
     this.timeout = options.timeout ?? 30000
 
-    if (isWindows() || isDarwin()) {
-      this.useCLI = true
-    } else {
-      this.useCLI = false
-    }
+    if (isWindows() || isDarwin()) this.useCLI = true
+    else this.useCLI = false
   }
 
   private async request<T>(
@@ -108,7 +154,7 @@ export class TailscaleLocalAPI {
     if (this.useCLI) {
       const method = options.method || "GET"
       const body = options.body ? JSON.parse(options.body as string) : undefined
-      return runCLI(method, endpoint, body) as Promise<T>
+      return camelize(await runCLI(method, endpoint, body)) as Promise<T>
     }
 
     const controller = new AbortController()
@@ -124,44 +170,37 @@ export class TailscaleLocalAPI {
       const response = await fetch(url, fetchOptions)
       clearTimeout(timeoutId)
 
-      if (!response.ok) {
-        await this.handleError(response)
-      }
+      if (!response.ok) await this.handleError(response)
 
-      if (response.status === 204) {
-        return {} as T
-      }
+      if (response.status === 204) return {} as T
 
-      return (await response.json()) as T
+      return camelize(await response.json()) as T
     } catch (error) {
       clearTimeout(timeoutId)
 
       const err = error as { code?: string }
-      if (err?.code === "ECONNREFUSED" || err?.code === "ENOTFOUND") {
+      if (err?.code === "ECONNREFUSED" || err?.code === "ENOTFOUND")
         throw new Error(
           "Cannot connect to Tailscale daemon. " +
             `Unix socket: ${this.socketPath}`
         )
-      }
 
       throw error
     }
   }
 
-  private async handleError(response: Response): Promise<never> {
-    const text = await response.text()
+  private async handleError(res: Response): Promise<never> {
+    const text = await res.text()
 
-    if (response.status === 403) {
-      throw new AccessDeniedError(text || "Access denied")
-    }
-    if (response.status === 404) {
+    if (res.status === 403) throw new AccessDeniedError(text || "Access denied")
+
+    if (res.status === 404)
       throw new PeerNotFoundError(text || "Peer not found")
-    }
-    if (response.status === 412) {
-      throw new PreconditionsFailedError(text || "Preconditions failed")
-    }
 
-    throw new Error(`HTTP ${response.status}: ${text}`)
+    if (res.status === 412)
+      throw new PreconditionsFailedError(text || "Preconditions failed")
+
+    throw new Error(`HTTP ${res.status}: ${text}`)
   }
 
   async status(peers = true): Promise<Status> {
@@ -174,9 +213,7 @@ export class TailscaleLocalAPI {
   }
 
   async whois(addr: string): Promise<Whois> {
-    if (!addr) {
-      throw new Error("Address is required")
-    }
+    if (!addr) throw new Error("Address is required")
     return this.request<Whois>(`whois?addr=${encodeURIComponent(addr)}`)
   }
 
@@ -210,9 +247,8 @@ export class TailscaleLocalAPI {
     size?: number
   ): Promise<PingResult> {
     const params = new URLSearchParams({ ip, type })
-    if (size !== undefined) {
-      params.append("size", size.toString())
-    }
+    if (size !== undefined) params.append("size", size.toString())
+
     return this.request<PingResult>(`ping?${params.toString()}`, {
       method: "POST"
     })
@@ -236,8 +272,8 @@ export class TailscaleLocalAPI {
       this.getProfiles()
     ])
     return {
-      Current: current as LoginProfile,
-      Profiles: profiles
+      current: current as LoginProfile,
+      profiles: profiles
     }
   }
 

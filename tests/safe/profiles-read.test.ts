@@ -20,10 +20,10 @@ describe("Profiles (Safe)", () => {
 
     if (profile) {
       expect(profile).toBeDefined()
-      expect(profile.ID).toBeDefined()
+      expect(profile.id).toBeDefined()
       // LoginName might not be available in all cases
-      if (profile.LoginName) {
-        expect(profile.LoginName).toBeDefined()
+      if (profile.loginName) {
+        expect(profile.loginName).toBeDefined()
       }
     } else {
       expect(profile).toBeNull()
@@ -44,10 +44,10 @@ describe("Profiles (Safe)", () => {
     try {
       const status = await client.getProfileStatus()
       expect(status).toBeDefined()
-      expect(status.Profiles).toBeInstanceOf(Array)
+      expect(status.profiles).toBeInstanceOf(Array)
 
-      if (status.Current) {
-        expect(status.Current.ID).toBeDefined()
+      if (status.current) {
+        expect(status.current.id).toBeDefined()
       }
     } catch (error) {
       // Profile status endpoint might not be available

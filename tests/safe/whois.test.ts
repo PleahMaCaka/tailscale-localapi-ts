@@ -25,12 +25,12 @@ describe("WhoIs (Safe)", () => {
 
     expect(result).toBeDefined()
     // The actual response structure might be different
-    if (result.Node) {
-      expect(result.Node).toBeDefined()
+    if (result.node) {
+      expect(result.node).toBeDefined()
     }
-    if (result.UserProfile) {
-      expect(result.UserProfile).toBeDefined()
-      expect(result.UserProfile.LoginName).toBeDefined()
+    if (result.userProfile) {
+      expect(result.userProfile).toBeDefined()
+      expect(result.userProfile.loginName).toBeDefined()
     }
   })
 

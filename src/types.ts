@@ -1,5 +1,5 @@
 export type BackendState =
-  | "NoState" // tailscale not running
+  | "NoState"
   | "NeedsLogin"
   | "NeedsMachineAuth"
   | "Stopped"
@@ -7,189 +7,189 @@ export type BackendState =
   | "Running"
 
 export interface PeerStatus {
-  ID: string
-  PublicKey: string
-  HostName: string
-  DNSName: string
-  OS: string
-  UserID: number
-  TailscaleIPs: string[]
-  AllowedIPs?: string[]
-  Tags?: string[]
-  Addrs?: string[]
-  CurAddr: string
-  Relay: string
-  PeerRelay?: string
-  RxBytes: number
-  TxBytes: number
-  Created: string
-  LastWrite: string
-  LastSeen: string
-  LastHandshake: string
-  Online: boolean
-  KeepAlive?: boolean
-  ExitNode: boolean
-  ExitNodeOption: boolean
-  Active: boolean
-  PeerAPIURL?: string[]
-  Capabilities?: string[]
-  SSHHostKeys?: string[]
-  NoFileSharingReason?: string
-  TaildropTarget?: number
-  ShareeNode?: boolean
-  InNetworkMap: boolean
-  InMagicSock: boolean
-  InEngine: boolean
-  Expired?: boolean
-  KeyExpiry?: string
+  id: string
+  publicKey: string
+  hostName: string
+  dnsName: string
+  os: string
+  userId: number
+  tailscaleIps: string[]
+  allowedIps?: string[]
+  tags?: string[]
+  addrs?: string[]
+  curAddr: string
+  relay: string
+  peerRelay?: string
+  rxBytes: number
+  txBytes: number
+  created: string
+  lastWrite: string
+  lastSeen: string
+  lastHandshake: string
+  online: boolean
+  keepAlive?: boolean
+  exitNode: boolean
+  exitNodeOption: boolean
+  active: boolean
+  peerApiUrl?: string[]
+  capabilities?: string[]
+  sshHostKeys?: string[]
+  noFileSharingReason?: string
+  taildropTarget?: number
+  shareeNode?: boolean
+  inNetworkMap: boolean
+  inMagicSock: boolean
+  inEngine: boolean
+  expired?: boolean
+  keyExpiry?: string
 }
 
 export interface TailnetStatus {
-  Name: string
-  MagicDNSSuffix: string
-  MagicDNSEnabled: boolean
+  name: string
+  magicDnsSuffix: string
+  magicDnsEnabled: boolean
 }
 
 export interface Status {
-  Version: string
-  TUN?: boolean
-  BackendState: BackendState
-  HaveNodeKey?: boolean
-  AuthURL?: string
-  TailscaleIPs?: string[]
-  Self: PeerStatus
-  Health?: string[]
-  MagicDNSSuffix?: string
-  CurrentTailnet?: TailnetStatus
-  CertDomains?: string[]
-  Peer?: Record<string, PeerStatus>
-  User?: Record<string, UserProfile>
-  ClientVersion?: unknown
+  version: string
+  tun?: boolean
+  backendState: BackendState
+  haveNodeKey?: boolean
+  authUrl?: string
+  tailscaleIps?: string[]
+  self: PeerStatus
+  health?: string[]
+  magicDnsSuffix?: string
+  currentTailnet?: TailnetStatus
+  certDomains?: string[]
+  peer?: Record<string, PeerStatus>
+  user?: Record<string, UserProfile>
+  clientVersion?: unknown
 }
 
 export interface Hostinfo {
-  OS?: string
-  OSVersion?: string
-  Hostname?: string
-  Services?: Service[]
-  SSHHostKeys?: string[]
+  os?: string
+  osVersion?: string
+  hostname?: string
+  services?: Service[]
+  sshHostKeys?: string[]
 }
 
 export interface Service {
-  Proto: "tcp" | "udp" | "peerapi4" | "peerapi6" | "peerapi-dns-proxy"
-  Port: number
-  Description?: string
+  proto: "tcp" | "udp" | "peerapi4" | "peerapi6" | "peerapi-dns-proxy"
+  port: number
+  description?: string
 }
 
 export interface Node {
-  ID: number
-  StableID: string
-  Name: string
-  User: number
-  Sharer?: number
-  Key: string
-  KeyExpiry: string
-  Machine: string
-  DiscoKey: string
-  Addresses: string[]
-  AllowedIPs: string[]
-  Endpoints?: string[]
-  DERP?: string
-  Hostinfo: Hostinfo
-  Created: string
-  Tags?: string[]
-  PrimaryRoutes?: string[]
-  LastSeen?: string
-  Online?: boolean
-  KeepAlive?: boolean
-  MachineAuthorized?: boolean
-  Capabilities?: string[]
-  ComputedName: string
-  ComputedNameWithHost: string
+  id: number
+  stableId: string
+  name: string
+  user: number
+  sharer?: number
+  key: string
+  keyExpiry: string
+  machine: string
+  discoKey: string
+  addresses: string[]
+  allowedIps: string[]
+  endpoints?: string[]
+  derp?: string
+  hostinfo: Hostinfo
+  created: string
+  tags?: string[]
+  primaryRoutes?: string[]
+  lastSeen?: string
+  online?: boolean
+  keepAlive?: boolean
+  machineAuthorized?: boolean
+  capabilities?: string[]
+  computedName: string
+  computedNameWithHost: string
 }
 
 export interface UserProfile {
-  ID: number
-  LoginName: string
-  DisplayName: string
-  ProfilePicURL?: string
+  id: number
+  loginName: string
+  displayName: string
+  profilePicUrl?: string
 }
 
 export interface Whois {
-  Node: Node
-  UserProfile: UserProfile
-  Caps?: string[]
+  node: Node
+  userProfile: UserProfile
+  caps?: string[]
 }
 
 export interface Prefs {
-  HostName: string
-  AcceptRoutes: boolean
-  AdvertiseRoutes: string[]
-  AdvertiseExitNode: boolean
-  AdvertiseDefaultRoute: boolean
-  ExitNodeID?: string
-  ExitNodeAllowLANAccess: boolean
-  SSH?: boolean
-  Funnel?: boolean
+  hostName: string
+  acceptRoutes: boolean
+  advertiseRoutes: string[]
+  advertiseExitNode: boolean
+  advertiseDefaultRoute: boolean
+  exitNodeId?: string
+  exitNodeAllowLanAccess: boolean
+  ssh?: boolean
+  funnel?: boolean
 }
 
 export type PartialPrefs = Partial<Prefs>
 
 export interface DERPMap {
-  Regions: Record<string, DERPRegion>
-  OmitDefaultRegions: boolean
+  regions: Record<string, DERPRegion>
+  omitDefaultRegions: boolean
 }
 
 export interface DERPRegion {
-  RegionID: number
-  RegionCode: string
-  RegionName: string
-  Nodes: DERPNode[]
+  regionId: number
+  regionCode: string
+  regionName: string
+  nodes: DERPNode[]
 }
 
 export interface DERPNode {
-  Name: string
-  RegionID: number
-  HostName: string
-  IPv4: string
-  IPv6?: string
-  STUNOnly?: boolean
-  CanPort80?: boolean
+  name: string
+  regionId: number
+  hostName: string
+  ipv4: string
+  ipv6?: string
+  stunOnly?: boolean
+  canPort80?: boolean
 }
 
 export interface PingResult {
-  Bytes: number
-  BytesSent: number
-  RoundTripMicros: number
-  LatencyMicros?: number
-  Err?: string
+  bytes: number
+  bytesSent: number
+  roundTripMicros: number
+  latencyMicros?: number
+  err?: string
 }
 
 export interface DNSQueryResponse {
-  Bytes: number
-  Resolvers: Resolver[]
+  bytes: number
+  resolvers: Resolver[]
 }
 
 export interface Resolver {
-  Addr: string
+  addr: string
 }
 
 export interface DNSOSConfig {
-  Nameservers: string[]
-  SearchDomains: string[]
-  MatchDomains: string[]
+  nameservers: string[]
+  searchDomains: string[]
+  matchDomains: string[]
 }
 
 export interface LoginProfile {
-  ID: string
-  Name: string
-  LoginName: string
-  Tailnet: string
+  id: string
+  name: string
+  loginName: string
+  tailnet: string
 }
 
 export interface ProfileStatus {
-  Current: LoginProfile
-  Profiles: LoginProfile[]
+  current: LoginProfile
+  profiles: LoginProfile[]
 }
 
 export interface ClientOptions {
@@ -217,7 +217,5 @@ export class PreconditionsFailedError extends Error {
     this.name = "PreconditionsFailedError"
   }
 }
-
-// utility types
 
 export type Device = PeerStatus & { isCurrent?: boolean }

@@ -1,107 +1,144 @@
 import TailscaleLocalAPI, { type Device } from "./src/index"
 
 async function main() {
-  console.log("=== Tailscale LocalAPI Debug Tool ===\n")
+  let output = "=== Tailscale LocalAPI Debug Tool ===\n\n"
 
   const client = new TailscaleLocalAPI()
   let allPassed = true
 
-  try {
-    console.log("1. Status:")
-    const status = await client.status()
-    console.log(`   Version: ${status.Version}`)
-    console.log(`   Backend State: ${status.BackendState}`)
-    console.log(
-      `   Self: ${status.Self?.DNSName} (${status.Self?.TailscaleIPs?.[0] || "N/A"})`
-    )
-    console.log(`   Peers: ${Object.keys(status.Peer || {}).length}`)
+  function getProp(obj: unknown, keys: string[]) {
+    if (!obj || typeof obj !== "object") return undefined
+    for (const k of keys) {
+      if (
+        Object.prototype.hasOwnProperty.call(obj, k) &&
+        (obj as any)[k] != null
+      )
+        return (obj as any)[k]
+    }
+    return undefined
+  }
 
-    console.log("\n2. Current Profile:")
+  function formatIps(device: unknown) {
+    const raw = getProp(device, [
+      "tailscaleIps",
+      "TailscaleIPs",
+      "tailscaleIPs",
+      "TailscaleIps",
+      "addrs",
+      "Addrs",
+      "addresses",
+      "Addresses",
+      "curAddr",
+      "CurAddr",
+      "ip",
+      "IP",
+      "ips",
+      "IPs"
+    ])
+
+    if (Array.isArray(raw)) return raw.join(", ")
+    if (typeof raw === "string" && raw.length > 0) return raw
+    if (raw == null) return "N/A"
+    try {
+      return String(raw)
+    } catch {
+      return "N/A"
+    }
+  }
+
+  try {
+    output += "1. Status:\n"
+    const status = await client.status()
+    output += `   Version: ${status.version}\n`
+    output += `   Backend State: ${status.backendState}\n`
+    output += `   Self: ${status.self?.dnsName} (${status.self?.tailscaleIps?.[0] || "N/A"})\n`
+    output += `   Peers: ${Object.keys(status.peer || {}).length}\n`
+
+    output += "\n2. Current Profile:\n"
     try {
       const profile = await client.getCurrentProfile()
       if (profile) {
-        console.log(`   ID: ${profile.ID}`)
-        console.log(`   Name: ${profile.Name}`)
-        console.log(`   Login: ${profile.LoginName || "N/A"}`)
+        output += `   ID: ${profile.id}\n`
+        output += `   Name: ${profile.name}\n`
+        output += `   Login: ${profile.loginName || "N/A"}\n`
       } else {
-        console.log("   No profile found")
+        output += "   No profile found\n"
       }
     } catch (error: unknown) {
       const err = error as { message?: string }
-      console.log(`   ❌ Failed to fetch profile: ${err.message || error}`)
+      output += `   ❌ Failed to fetch profile: ${err.message || error}\n`
       allPassed = false
     }
 
-    console.log("\n3. Preferences:")
+    output += "\n3. Preferences:\n"
     try {
       const prefs = await client.getPrefs()
-      const hostName = prefs?.HostName || prefs?.HostName || "N/A"
-      console.log(`   HostName: ${hostName}`)
+      const hostName = prefs?.hostName || prefs?.hostName || "N/A"
+      output += `   HostName: ${hostName}\n`
     } catch (error: unknown) {
       const err = error as { message?: string }
-      console.log(`   ❌ Failed to fetch preferences: ${err.message || error}`)
+      output += `   ❌ Failed to fetch preferences: ${err.message || error}\n`
       allPassed = false
     }
 
-    console.log("\n4. DERP Map:")
+    output += "\n4. DERP Map:\n"
     try {
       const derpMap = await client.getDERPMap()
-      const regionsCount = derpMap?.Regions
-        ? Object.keys(derpMap.Regions).length
+      const regionsCount = derpMap?.regions
+        ? Object.keys(derpMap.regions).length
         : 0
-      console.log(`   Regions: ${regionsCount}`)
+      output += `   Regions: ${regionsCount}\n`
     } catch (error: unknown) {
       const err = error as { message?: string }
-      console.log(`   ❌ Failed to fetch DERP map: ${err.message || error}`)
+      output += `   ❌ Failed to fetch DERP map: ${err.message || error}\n`
       allPassed = false
     }
 
-    console.log("\n5. Tailnet Devices:")
+    output += "\n5. Tailnet Devices:\n"
     try {
       // Combine self and peers into devices list
       const devices: Device[] = [
-        { ...status.Self, isCurrent: true },
-        ...Object.values(status.Peer || {})
+        { ...status.self, isCurrent: true },
+        ...Object.values(status.peer || {})
       ]
 
       if (devices.length === 0) {
-        console.log("   No devices found")
+        output += "   No devices found\n"
       } else {
         devices.forEach((device: Device, index: number) => {
-          const name = device.DNSName || device.HostName || "Unknown"
-          const ips = device.TailscaleIPs?.join(", ") || "N/A"
-          const os = device.OS || "Unknown"
-          const online = device.Online ? "Online" : "Offline"
-          const lastSeen = device.LastSeen
-            ? new Date(device.LastSeen).toLocaleString()
+          const name = device.dnsName || device.hostName || "Unknown"
+          const ips = formatIps(device)
+          const os = device.os || "Unknown"
+          const online = device.online ? "Online" : "Offline"
+          const lastSeen = device.lastSeen
+            ? new Date(device.lastSeen).toLocaleString()
             : "N/A"
 
           const selfMark = device.isCurrent ? " (current device)" : ""
-          const statusText = device.Online
+          const statusText = device.online
             ? online
             : `${online} (last seen: ${lastSeen})`
 
-          console.log(`   ${index + 1}. ${name}${selfMark}`)
-          console.log(`      IPs: ${ips}`)
-          console.log(`      OS: ${os}`)
-          console.log(`      Status: ${statusText}`)
-          console.log("") // Empty line for spacing
+          output += `   ${index + 1}. ${name}${selfMark}\n`
+          output += `      IPs: ${ips}\n`
+          output += `      OS: ${os}\n`
+          output += `      Status: ${statusText}\n`
+          output += "\n" // Empty line for spacing
         })
       }
     } catch (error: unknown) {
       const err = error as { message?: string }
-      console.log(`   ❌ Failed to list devices: ${err.message || error}`)
+      output += `   ❌ Failed to list devices: ${err.message || error}\n`
       allPassed = false
     }
 
-    console.log(
-      `\n=== ${allPassed ? "All checks passed" : "Some checks failed (see above)"} ===`
-    )
+    output += `\n=== ${allPassed ? "All checks passed" : "Some checks failed (see above)"} ===\n`
     if (!allPassed) {
-      console.log(
-        "\nNote: Some endpoints may not be available in CLI mode on Windows or this Tailscale version."
-      )
+      output +=
+        "\nNote: Some endpoints may not be available in CLI mode on Windows or this Tailscale version.\n"
     }
+
+    console.log(output)
   } catch (error: unknown) {
     const err = error as { message?: string }
     console.error("\n❌ Critical error:", err.message || error)

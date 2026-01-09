@@ -25,7 +25,7 @@ const client = new TailscaleLocalAPI()
 // Get current status
 const status = await client.status()
 console.log("Backend state:", status.BackendState)
-console.log("Self:", status.Self?.DNSName)
+console.log("Self:", status.self?.dnsName)
 ```
 
 ## Platform Support
@@ -62,8 +62,8 @@ const status = await client.statusWithoutPeers()
 ```typescript
 // Lookup peer information by IP
 const whois = await client.whois("100.x.x.x")
-console.log("User:", whois.UserProfile.LoginName)
-console.log("Node:", whois.Node.Name)
+console.log("User:", whois.userProfile.loginName)
+console.log("Node:", whois.node.name)
 ```
 
 ### Preferences
@@ -74,8 +74,8 @@ const prefs = await client.getPrefs()
 
 // Edit preferences
 await client.editPrefs({
-  ExitNodeID: "some-node-id",
-  AcceptRoutes: true,
+  exitNodeId: "some-node-id",
+  acceptRoutes: true,
 })
 
 // Validate preferences
@@ -87,8 +87,8 @@ const validation = await client.checkPrefs(prefs)
 ```typescript
 // Get DERP relay configuration
 const derpMap = await client.getDERPMap()
-derpMap.Regions.forEach((region) => {
-  console.log(`Region ${region.RegionName}: ${region.Nodes.length} nodes`)
+derpMap.regions.forEach((region) => {
+  console.log(`Region ${region.regionName}: ${region.nodes.length} nodes`)
 })
 ```
 
@@ -97,11 +97,11 @@ derpMap.Regions.forEach((region) => {
 ```typescript
 // Query DNS
 const dnsResult = await client.queryDNS("example.com", "A")
-console.log("Resolvers:", dnsResult.Resolvers)
+console.log("Resolvers:", dnsResult.resolvers)
 
 // Get system DNS configuration
 const dnsConfig = await client.getDNSOSConfig()
-console.log("Nameservers:", dnsConfig.Nameservers)
+console.log("Nameservers:", dnsConfig.nameservers)
 ```
 
 ### Profiles
@@ -134,7 +134,7 @@ await client.resetAuth()
 
 ```typescript
 // Start Tailscale
-await client.start({ HostName: "my-device" })
+await client.start({ hostName: "my-device" })
 
 // Reload configuration
 const result = await client.reloadConfig()

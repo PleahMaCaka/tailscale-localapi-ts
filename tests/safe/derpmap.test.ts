@@ -19,21 +19,21 @@ describe("DERP Map (Safe)", () => {
     const derpMap = await client.getDERPMap()
 
     expect(derpMap).toBeDefined()
-    expect(typeof derpMap.Regions).toBe("object")
-    expect(Object.keys(derpMap.Regions).length).toBeGreaterThan(0)
+    expect(typeof derpMap.regions).toBe("object")
+    expect(Object.keys(derpMap.regions).length).toBeGreaterThan(0)
   })
 
   test.skipIf(!tailscaleRunning)(
     "should have valid region structure",
     async () => {
       const derpMap = await client.getDERPMap()
-      const firstRegion = Object.values(derpMap.Regions)[0] as DERPRegion
+      const firstRegion = Object.values(derpMap.regions)[0] as DERPRegion
 
       expect(firstRegion).toBeDefined()
-      expect(firstRegion.RegionID).toBeNumber()
-      expect(firstRegion.RegionCode).toBeString()
-      expect(firstRegion.RegionName).toBeString()
-      expect(firstRegion.Nodes).toBeInstanceOf(Array)
+      expect(firstRegion.regionId).toBeNumber()
+      expect(firstRegion.regionCode).toBeString()
+      expect(firstRegion.regionName).toBeString()
+      expect(firstRegion.nodes).toBeInstanceOf(Array)
     }
   )
 

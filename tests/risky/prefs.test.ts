@@ -38,8 +38,8 @@ describe.skipIf(!tailscaleRunning || !process.env.TAILSCALE_TEST_MUTATIONS)(
       const prefs = await client.getPrefs()
 
       expect(prefs).toBeDefined()
-      expect(typeof prefs.HostName).toBe("string")
-      expect(typeof prefs.AcceptRoutes).toBe("boolean")
+      expect(typeof prefs.hostName).toBe("string")
+      expect(typeof prefs.acceptRoutes).toBe("boolean")
     })
 
     test("should validate preferences", async () => {
