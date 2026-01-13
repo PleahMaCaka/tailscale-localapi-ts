@@ -6,19 +6,17 @@ async function main() {
   const client = new TailscaleLocalAPI()
   let allPassed = true
 
-  function getProp(obj: unknown, keys: string[]) {
+  function getProp<T = unknown>(obj: unknown, keys: string[]): T | undefined {
     if (!obj || typeof obj !== "object") return undefined
+    const o = obj as Record<string, unknown>
     for (const k of keys) {
-      if (
-        Object.prototype.hasOwnProperty.call(obj, k) &&
-        (obj as any)[k] != null
-      )
-        return (obj as any)[k]
+      if (Object.prototype.hasOwnProperty.call(o, k) && o[k] != null)
+        return o[k] as T
     }
     return undefined
   }
 
-  function formatIps(device: unknown) {
+  function formatIps(device: unknown): string {
     const raw = getProp(device, [
       "tailscaleIps",
       "TailscaleIPs",
@@ -36,7 +34,7 @@ async function main() {
       "IPs"
     ])
 
-    if (Array.isArray(raw)) return raw.join(", ")
+    if (Array.isArray(raw)) return (raw as string[]).join(", ")
     if (typeof raw === "string" && raw.length > 0) return raw
     if (raw == null) return "N/A"
     try {
@@ -51,6 +49,14 @@ async function main() {
     const status = await client.status()
     output += `   Version: ${status.version}\n`
     output += `   Backend State: ${status.backendState}\n`
+
+    if (status.backendState === "NeedsLogin") {
+      output +=
+        "   ❌ Not logged in. Please run 'tailscale up' to login and then re-run this tool.\n"
+      if (status.authUrl) output += `   Auth URL: ${status.authUrl}\n`
+      allPassed = false
+    }
+
     output += `   Self: ${status.self?.dnsName} (${status.self?.tailscaleIps?.[0] || "N/A"})\n`
     output += `   Peers: ${Object.keys(status.peer || {}).length}\n`
 

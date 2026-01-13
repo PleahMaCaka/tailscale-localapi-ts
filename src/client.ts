@@ -67,37 +67,6 @@ function toCamelCase(key: string): string {
     .join("")
 }
 
-const ACRONYMS: Record<string, string> = {
-  id: "ID",
-  ip: "IP",
-  ips: "IPs",
-  dns: "DNS",
-  os: "OS",
-  lan: "LAN",
-  api: "API",
-  url: "URL",
-  ssh: "SSH",
-  derp: "DERP",
-  stun: "STUN",
-  ipv4: "IPv4",
-  ipv6: "IPv6",
-  so: "SO",
-  somark: "SOMark",
-  tun: "TUN"
-}
-
-function toPascalCase(key: string): string {
-  const words = key.match(/[A-Z]+(?=[A-Z][a-z])|[A-Z]?[a-z]+|\d+/g)
-  if (!words) return key.charAt(0).toUpperCase() + key.slice(1)
-  return words
-    .map(w => {
-      const lw = w.toLowerCase()
-      if (ACRONYMS[lw]) return ACRONYMS[lw]
-      return w.charAt(0).toUpperCase() + w.slice(1)
-    })
-    .join("")
-}
-
 function camelize(obj: unknown): unknown {
   if (Array.isArray(obj)) return obj.map(v => camelize(v))
   if (obj && typeof obj === "object") {
@@ -153,8 +122,11 @@ export class TailscaleLocalAPI {
   ): Promise<T> {
     if (this.useCLI) {
       const method = options.method || "GET"
-      const body = options.body ? JSON.parse(options.body as string) : undefined
-      return camelize(await runCLI(method, endpoint, body)) as Promise<T>
+      const body =
+        options.body && typeof options.body === "string"
+          ? JSON.parse(options.body)
+          : undefined
+      return camelize(await runCLI(method, endpoint, body)) as T
     }
 
     const controller = new AbortController()
@@ -165,6 +137,7 @@ export class TailscaleLocalAPI {
       ...options,
       signal: controller.signal
     }
+    ;(fetchOptions as RequestInit & { unix?: string }).unix = this.socketPath
 
     try {
       const response = await fetch(url, fetchOptions)
