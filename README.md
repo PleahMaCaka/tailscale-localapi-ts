@@ -1,209 +1,84 @@
-# Tailscale LocalAPI TypeScript Client
+# tailnet.ts
 
-TypeScript client for Tailscale LocalAPI built with Bun.
+One TypeScript client for Tailscale and Headscale control planes, a separate
+client for the local daemon, and a Headplane-style dashboard built on both.
 
-## Features
+```typescript
+import { Tailnet } from "tailnet.ts"
+import { headscale } from "headscale.ts"
 
-- **Linux support**: Unix socket connection to Tailscale daemon
-- **Full API coverage**: status, whois, prefs, DERP map, DNS, metrics, profiles, and more
-- **Type-safe**: Comprehensive TypeScript definitions matching Tailscale API
-- **Bun-native**: Optimized for Bun runtime
+const control = new Tailnet(headscale({ url, apiKey }))
 
-## Installation
+await control.nodes.fetch()
+await control.nodes.setTags(id, ["tag:server"])
+await control.policy.set(document)
+```
+
+Swapping to Tailscale's hosted control plane changes the constructor and
+nothing else:
+
+```typescript
+import { tailscale } from "tailscale.ts"
+
+const control = new Tailnet(tailscale({ tailnet: "-", apiKey }))
+```
+
+## Packages
+
+| Path | What it is |
+| --- | --- |
+| `packages/tailnet.ts` | The shared contract, types and HTTP layer |
+| `packages/headscale.ts` | Headscale backend, plus what only it can do |
+| `packages/tailscale.ts` | Tailscale backend, plus its DNS API |
+| `packages/tailscaled.ts` | The LocalAPI client for the daemon on this machine |
+| `apps/panescale` | Dashboard covering machines, users, ACL, DNS and keys |
+| `apps/docs` | Documentation site |
+| `nix/` | Throwaway headscale + tailscaled for local testing |
+
+## Risk levels
+
+There are no `write` or `danger` namespaces. Each method's TSDoc says what it
+can break, on a line that always reads the same, so your editor shows it on
+hover and `rg 'Risk: \*\*danger\*\*'` finds every one.
+
+```typescript
+/**
+ * Expires the node's key.
+ *
+ * @remarks
+ * Risk: **danger**. The machine drops off the tailnet and cannot rejoin
+ * until someone logs in on it again.
+ */
+```
+
+No risk line means the method reads and changes nothing.
+
+## Develop
 
 ```bash
-bun install
+nix develop            # bun, headscale, tailscale, and the tailnet helper
+tailnet up             # isolated headscale + tailscaled on loopback
+eval "$(tailnet env)"  # socket, control url and an API key
+bun run test           # every package
+bun run dev            # PaneScale on http://127.0.0.1:4270
+bun run docs           # docs on http://127.0.0.1:4271
+bun run check          # biome
 ```
 
-## Quick Start
-
-```typescript
-import TailscaleLocalAPI from "./src/index"
-
-const client = new TailscaleLocalAPI()
-
-// Get current status
-const status = await client.status()
-console.log("Backend state:", status.BackendState)
-console.log("Self:", status.self?.dnsName)
-```
-
-## Platform Support
-
-### Linux
-Uses Unix socket at `/var/run/tailscale/tailscaled.sock` by default.
-
-```typescript
-const client = new TailscaleLocalAPI({
-  socketPath: "/var/run/tailscale/tailscaled.sock",
-})
-```
-
-### Environment Variables
-
-| Variable                    | Description              |
-| ----------------------------- | ------------------------ |
-| `TAILSCALE_LOCALAPI_SOCKET`   | Unix socket path (Linux) |
-
-## API Methods
-
-### Status & Info
-
-```typescript
-// Get full status with peers
-const status = await client.status()
-
-// Get status without peers (faster)
-const status = await client.statusWithoutPeers()
-```
-
-### WhoIs Lookup
-
-```typescript
-// Lookup peer information by IP
-const whois = await client.whois("100.x.x.x")
-console.log("User:", whois.userProfile.loginName)
-console.log("Node:", whois.node.name)
-```
-
-### Preferences
-
-```typescript
-// Get current preferences
-const prefs = await client.getPrefs()
-
-// Edit preferences
-await client.editPrefs({
-  exitNodeId: "some-node-id",
-  acceptRoutes: true,
-})
-
-// Validate preferences
-const validation = await client.checkPrefs(prefs)
-```
-
-### DERP Map
-
-```typescript
-// Get DERP relay configuration
-const derpMap = await client.getDERPMap()
-derpMap.regions.forEach((region) => {
-  console.log(`Region ${region.regionName}: ${region.nodes.length} nodes`)
-})
-```
-
-### DNS
-
-```typescript
-// Query DNS
-const dnsResult = await client.queryDNS("example.com", "A")
-console.log("Resolvers:", dnsResult.resolvers)
-
-// Get system DNS configuration
-const dnsConfig = await client.getDNSOSConfig()
-console.log("Nameservers:", dnsConfig.nameservers)
-```
-
-### Profiles
-
-```typescript
-// Get current profile
-const current = await client.getCurrentProfile()
-
-// Get all profiles
-const profiles = await client.getProfiles()
-
-// Switch profile
-await client.switchProfile("profile-id")
-```
-
-### Authentication (⚠️ Dangerous)
-
-```typescript
-// Start interactive login
-await client.loginInteractive()
-
-// Logout (may log you out)
-await client.logout()
-
-// Reset auth (may require re-authentication)
-await client.resetAuth()
-```
-
-### Control (⚠️ Dangerous)
-
-```typescript
-// Start Tailscale
-await client.start({ hostName: "my-device" })
-
-// Reload configuration
-const result = await client.reloadConfig()
-
-// Shutdown Tailscale
-await client.shutdown()
-```
-
-### System Checks
-
-```typescript
-// Check IP forwarding
-const ipForwarding = await client.checkIPForwarding()
-
-// Check SO_MARK usage
-const soMark = await client.checkSOMarkInUse()
-```
-
-## Testing
-
-Run the test suite to verify functionality:
+`tailnet up` never touches a tailnet you actually use, which is what makes the
+destructive tests safe to run:
 
 ```bash
-bun test
+bun run test:danger
 ```
 
-Note: Tests are designed to work with an active Tailscale daemon and may be skipped if not available.
+The Tailscale backend is the exception: it is covered by unit tests against a
+stubbed transport, never against a live tailnet.
 
-## Error Handling
+## Documentation
 
-```typescript
-import {
-  AccessDeniedError,
-  PeerNotFoundError,
-  PreconditionsFailedError,
-} from "./src/index"
-
-try {
-  await client.whois("invalid-ip")
-} catch (error) {
-  if (error instanceof AccessDeniedError) {
-    console.error("Access denied")
-  } else if (error instanceof PeerNotFoundError) {
-    console.error("Peer not found")
-  } else if (error instanceof PreconditionsFailedError) {
-    console.error("Preconditions failed")
-  } else {
-    console.error("Unknown error:", error)
-  }
-}
-```
-
-## Debug Tool
-
-Run `debug.ts` to get a comprehensive overview of your Tailscale setup, including status, profiles, preferences, DERP map, and all tailnet devices:
-
-```bash
-bun debug.ts
-```
-
-## Configuration
-
-```typescript
-interface ClientOptions {
-  socketPath?: string // Unix socket path (Linux)
-  timeout?: number // Request timeout in ms (default: 30000)
-}
-```
+`bun run docs`, or read `apps/docs/src/content/docs`.
 
 ## License
 
-[MIT License](./LICENSE)
+[MIT](./LICENSE)
