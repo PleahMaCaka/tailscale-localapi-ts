@@ -1,7 +1,0 @@
-export { TailscaleBackend, tailscale } from "./backend"
-export { TailscaleDeviceOps } from "./managers/devices"
-export { TailscaleDnsOps } from "./managers/dns"
-export { TailscaleKeyOps } from "./managers/keys"
-export { TailscalePolicyOps } from "./managers/policy"
-export { TailscaleUserOps } from "./managers/users"
-export type * from "./types"

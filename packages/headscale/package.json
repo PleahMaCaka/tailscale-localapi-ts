@@ -1,0 +1,30 @@
+{
+  "name": "@tailnet/headscale",
+  "version": "0.1.0",
+  "description": "Headscale control plane client",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "headscale",
+    "tailscale",
+    "tailnet",
+    "control-plane",
+    "typescript"
+  ],
+  "scripts": {
+    "test": "bun test tests/unit tests/live",
+    "test:breaking": "bun test tests/breaking"
+  },
+  "dependencies": {
+    "@tailnet/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@tailnet/tailscale",
+  "version": "0.1.0",
+  "description": "Tailscale control plane client",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "tailscale",
+    "tailnet",
+    "control-plane",
+    "api",
+    "typescript"
+  ],
+  "scripts": {
+    "test": "bun test tests/unit"
+  },
+  "dependencies": {
+    "@tailnet/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

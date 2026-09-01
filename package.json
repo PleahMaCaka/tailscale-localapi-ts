@@ -11,8 +11,8 @@
   },
   "scripts": {
     "test": "bun run --filter '*' test",
-    "test:danger": "bun run --filter '*' test:danger",
-    "debug": "bun run --filter 'tailscaled.ts' debug",
+    "test:breaking": "bun run --filter '*' test:breaking",
+    "debug": "bun run --filter '@tailnet/tailscaled' debug",
     "dev": "bun run --filter 'panescale' dev",
     "docs": "bun run --filter 'docs' dev",
     "format": "biome format --write .",

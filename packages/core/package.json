@@ -1,0 +1,26 @@
+{
+  "name": "@tailnet/core",
+  "version": "0.1.0",
+  "description": "Shared contract behind @tailnet/headscale and @tailnet/tailscale",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "tailscale",
+    "headscale",
+    "tailnet",
+    "control-plane",
+    "typescript"
+  ],
+  "scripts": {
+    "test": "bun test tests/unit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

@@ -1,5 +1,11 @@
 {
   "extends": "./tsconfig.base.json",
   "files": [],
-  "references": [{ "path": "./packages/tailscale.ts" }]
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/headscale" },
+    { "path": "./packages/tailscale" },
+    { "path": "./packages/tailscaled" },
+    { "path": "./packages/tailcat" }
+  ]
 }
