@@ -1,4 +1,4 @@
-import type { Device, Status } from "tailscaled.ts"
+import type { Device, Status } from "@tailnet/tailscaled"
 import { shortName, timeAgo } from "./format"
 
 export interface DeviceView {

@@ -1,5 +1,5 @@
 import { fail } from "@sveltejs/kit"
-import { TailnetError } from "tailnet.ts"
+import { TailnetError } from "@tailnet/core"
 
 /** Runs a control-plane mutation and turns any failure into a form error. */
 export async function attempt<T>(work: () => Promise<T>) {

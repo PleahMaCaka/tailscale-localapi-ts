@@ -1,5 +1,5 @@
 import { fail } from "@sveltejs/kit"
-import { DaemonUnreachableError, TailscaledError } from "tailscaled.ts"
+import { DaemonUnreachableError, TailscaledError } from "@tailnet/tailscaled"
 import { daemon } from "$lib/server/tailscaled"
 import { toDeviceViews } from "$lib/tailnet/devices"
 import { PREF_TOGGLES, toggleValues } from "$lib/tailnet/prefs"

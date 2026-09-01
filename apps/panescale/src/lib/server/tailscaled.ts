@@ -1,3 +1,3 @@
-import { Tailscaled } from "tailscaled.ts"
+import { Tailscaled } from "@tailnet/tailscaled"
 
 export const daemon = new Tailscaled()

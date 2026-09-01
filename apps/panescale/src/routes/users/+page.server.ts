@@ -1,25 +1,10 @@
 import { fail } from "@sveltejs/kit"
 import { attempt } from "$lib/server/actions"
-import { requireControl } from "$lib/server/control"
+import { requireControl, requireHeadscale } from "$lib/server/control"
 import { toUserViews } from "$lib/tailnet/users"
 
-interface WritableUsers {
-  create(options: {
-    name: string
-    displayName?: string
-    email?: string
-  }): Promise<unknown>
-  rename(id: string, newName: string): Promise<unknown>
-  delete(id: string): Promise<void>
-}
-
-function writableUsers(): WritableUsers {
-  const backend = requireControl().backend
-  if (backend.name !== "headscale") {
-    throw new Error("Only Headscale manages its own user records")
-  }
-
-  return backend.users as unknown as WritableUsers
+function writableUsers() {
+  return requireHeadscale().users
 }
 
 export async function load() {
@@ -32,7 +17,7 @@ export async function load() {
 
   return {
     users: toUserViews(users, nodes),
-    editable: control.backend.name === "headscale"
+    editable: control.name === "headscale"
   }
 }
 

@@ -1,5 +1,5 @@
 import { attempt, toList } from "$lib/server/actions"
-import { requireControl } from "$lib/server/control"
+import { requireControl, requireHeadscale } from "$lib/server/control"
 import { toMachineViews } from "$lib/tailnet/machines"
 import { toUserViews } from "$lib/tailnet/users"
 
@@ -14,7 +14,7 @@ export async function load() {
   return {
     machines: toMachineViews(nodes),
     users: toUserViews(users, nodes),
-    canMoveOwner: control.backend.name === "headscale"
+    canMoveOwner: control.name === "headscale"
   }
 }
 
@@ -24,7 +24,8 @@ export const actions = {
     const control = requireControl()
 
     return attempt(async () => {
-      if (!control.nodes.rename) throw new Error("This backend cannot rename")
+      if (!control.nodes.rename)
+        throw new Error("This control plane cannot rename")
 
       await control.nodes.rename(
         String(form.get("id")),
@@ -57,18 +58,13 @@ export const actions = {
 
   moveToUser: async ({ request }) => {
     const form = await request.formData()
-    const backend = requireControl().backend
 
-    return attempt(async () => {
-      if (backend.name !== "headscale") {
-        throw new Error("Only Headscale can move a node between users")
-      }
-
-      const nodes = backend.nodes as unknown as {
-        moveToUser(id: string, userId: string): Promise<unknown>
-      }
-      await nodes.moveToUser(String(form.get("id")), String(form.get("userId")))
-    })
+    return attempt(() =>
+      requireHeadscale().nodes.moveToUser(
+        String(form.get("id")),
+        String(form.get("userId"))
+      )
+    )
   },
 
   expire: async ({ request }) => {

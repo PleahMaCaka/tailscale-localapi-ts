@@ -1,4 +1,4 @@
-import type { TailnetNode, TailnetUser } from "tailnet.ts"
+import type { TailnetNode, TailnetUser } from "@tailnet/core"
 
 export interface UserView {
   id: string

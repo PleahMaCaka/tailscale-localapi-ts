@@ -26,11 +26,11 @@
   },
   "dependencies": {
     "@iconify/svelte": "^5.2.2",
-    "headscale.ts": "workspace:*",
+    "@tailnet/headscale": "workspace:*",
     "pretendard": "^1.3.9",
-    "tailnet.ts": "workspace:*",
-    "tailscale.ts": "workspace:*",
-    "tailscaled.ts": "workspace:*",
+    "@tailnet/core": "workspace:*",
+    "@tailnet/tailscale": "workspace:*",
+    "@tailnet/tailscaled": "workspace:*",
     "yaml": "^2.9.0"
   }
 }

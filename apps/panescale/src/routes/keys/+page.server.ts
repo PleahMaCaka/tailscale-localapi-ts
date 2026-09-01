@@ -1,36 +1,18 @@
 import { fail } from "@sveltejs/kit"
-import { TailnetError } from "tailnet.ts"
+import { TailnetError } from "@tailnet/core"
+import { Headscale } from "@tailnet/headscale"
 import { attempt, toList } from "$lib/server/actions"
 import { requireControl } from "$lib/server/control"
 
-interface HeadscaleApiKeys {
-  fetch(): Promise<
-    {
-      id: string
-      prefix: string
-      expiration: string
-      createdAt: string
-      lastSeen: string | null
-    }[]
-  >
-  create(expiration?: string): Promise<string>
-  expire(prefix: string): Promise<void>
-}
+function apiKeys() {
+  const control = requireControl()
 
-function apiKeys(): HeadscaleApiKeys | null {
-  const backend = requireControl().backend
-  if (backend.name !== "headscale") return null
-
-  return (backend as unknown as { apiKeys: HeadscaleApiKeys }).apiKeys
-}
-
-function isoInDays(days: number): string {
-  return new Date(Date.now() + days * 86_400_000).toISOString()
+  return control instanceof Headscale ? control.apiKeys : null
 }
 
 export async function load() {
   const control = requireControl()
-  const perUser = control.backend.name === "headscale"
+  const perUser = control.name === "headscale"
   const users = await control.users.fetch()
 
   const keysByUser = perUser
@@ -112,11 +94,12 @@ export const actions = {
 
     try {
       const keys = apiKeys()
-      if (!keys) return fail(400, { reason: "This backend has no API keys" })
+      if (!keys)
+        return fail(400, { reason: "This control plane has no API keys" })
 
       return {
         issuedKey: await keys.create(
-          isoInDays(Number.isFinite(days) ? days : 90)
+          (Number.isFinite(days) ? days : 90) * 86_400
         )
       }
     } catch (error) {
@@ -132,7 +115,7 @@ export const actions = {
 
     return attempt(async () => {
       const keys = apiKeys()
-      if (!keys) throw new Error("This backend has no API keys")
+      if (!keys) throw new Error("This control plane has no API keys")
 
       await keys.expire(prefix)
     })

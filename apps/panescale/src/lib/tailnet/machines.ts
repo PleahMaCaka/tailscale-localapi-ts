@@ -1,4 +1,4 @@
-import type { TailnetNode } from "tailnet.ts"
+import type { TailnetNode } from "@tailnet/core"
 import { timeAgo } from "./format"
 
 export interface MachineView {

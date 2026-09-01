@@ -1,23 +1,14 @@
 import { fail } from "@sveltejs/kit"
-import { TailnetError } from "tailnet.ts"
+import { TailnetError } from "@tailnet/core"
+import { Tailscale } from "@tailnet/tailscale"
 import { toList } from "$lib/server/actions"
 import { requireControl } from "$lib/server/control"
 import { readDnsSettings, writeDnsSettings } from "$lib/server/headscaleConfig"
 
-interface TailscaleDns {
-  nameservers(): Promise<string[]>
-  setNameservers(nameservers: string[]): Promise<string[]>
-  preferences(): Promise<{ magicDNS: boolean }>
-  setPreferences(preferences: { magicDNS: boolean }): Promise<unknown>
-  searchPaths(): Promise<string[]>
-  setSearchPaths(paths: string[]): Promise<string[]>
-}
+function tailscaleDns() {
+  const control = requireControl()
 
-function tailscaleDns(): TailscaleDns | null {
-  const backend = requireControl().backend
-  if (backend.name !== "tailscale") return null
-
-  return (backend as unknown as { dns: TailscaleDns }).dns
+  return control instanceof Tailscale ? control.dns : null
 }
 
 export async function load() {

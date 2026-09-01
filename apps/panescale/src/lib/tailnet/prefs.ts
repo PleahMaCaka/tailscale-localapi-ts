@@ -1,4 +1,4 @@
-import type { Prefs } from "tailscaled.ts"
+import type { Prefs } from "@tailnet/tailscaled"
 
 export interface PrefToggle {
   field: "routeAll" | "runSsh" | "shieldsUp" | "exitNodeAllowLanAccess"

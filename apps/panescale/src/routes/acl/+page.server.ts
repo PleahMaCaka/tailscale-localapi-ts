@@ -1,5 +1,5 @@
 import { fail } from "@sveltejs/kit"
-import { NotFoundError, TailnetError } from "tailnet.ts"
+import { NotFoundError, TailnetError } from "@tailnet/core"
 import { requireControl } from "$lib/server/control"
 
 const STARTER = `{
