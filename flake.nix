@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    tailcat.url = "github:tailscale/tailcat";
   };
 
   nixConfig = {
@@ -15,6 +16,7 @@
     {
       nixpkgs,
       flake-utils,
+      tailcat,
       ...
     }:
     flake-utils.lib.eachDefaultSystem (
@@ -47,6 +49,7 @@
             tailscale
             jq
             tailnet
+            tailcat.packages.${system}.default
           ];
 
           shellHook = ''

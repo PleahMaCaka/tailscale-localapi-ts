@@ -1,0 +1,27 @@
+{
+  "name": "@tailnet/tailcat",
+  "version": "0.1.0",
+  "description": "Client for the tailcat CLI: WireGuard tunnels between two machines with no control plane",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "tailscale",
+    "tailcat",
+    "wireguard",
+    "derp",
+    "typescript",
+    "bun"
+  ],
+  "scripts": {
+    "test": "bun test tests/unit tests/live"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.0"
+  }
+}
