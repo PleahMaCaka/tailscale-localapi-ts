@@ -43,3 +43,6 @@ result-*
 dist
 build
 .astro
+
+# generated api reference (starlight-typedoc)
+apps/docs/src/content/docs/api

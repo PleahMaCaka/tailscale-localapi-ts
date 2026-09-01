@@ -1,19 +1,48 @@
 import starlight from "@astrojs/starlight"
 import { defineConfig } from "astro/config"
+import starlightTypeDoc, { typeDocSidebarGroup } from "starlight-typedoc"
+
+const [owner, repository] = (process.env.GITHUB_REPOSITORY ?? "").split("/")
 
 export default defineConfig({
+  // Project pages live under /<repository>, and both parts follow a rename
+  site: owner
+    ? `https://${owner.toLowerCase()}.github.io`
+    : "http://127.0.0.1:4271",
+  base: repository ? `/${repository}` : "/",
   server: { host: "127.0.0.1", port: 4271 },
   integrations: [
     starlight({
-      title: "tailnet.ts",
+      title: "tailnet",
       description:
         "One TypeScript client for Tailscale and Headscale control planes",
       social: [
         {
           icon: "github",
           label: "GitHub",
-          href: "https://github.com/PleahMaCaka/tailnet.ts"
+          href: `https://github.com/${owner ?? "pleahmacaka"}/${repository ?? "tailscale-localapi-ts"}`
         }
+      ],
+      plugins: [
+        starlightTypeDoc({
+          entryPoints: [
+            "../../packages/core",
+            "../../packages/tailscale",
+            "../../packages/headscale",
+            "../../packages/tailscaled",
+            "../../packages/tailcat"
+          ],
+          output: "api",
+          sidebar: { label: "API", collapsed: true },
+          typeDoc: {
+            entryPointStrategy: "packages",
+            entryFileName: "index",
+            packageOptions: {
+              entryPoints: ["src/index.ts"],
+              excludeInternal: true
+            }
+          }
+        })
       ],
       sidebar: [
         {
@@ -22,9 +51,10 @@ export default defineConfig({
         },
         { label: "Guides", items: [{ autogenerate: { directory: "guides" } }] },
         {
-          label: "Reference",
+          label: "Packages",
           items: [{ autogenerate: { directory: "reference" } }]
-        }
+        },
+        typeDocSidebarGroup
       ]
     })
   ]
