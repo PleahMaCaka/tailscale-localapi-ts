@@ -1,0 +1,87 @@
+@import "tailwindcss";
+@import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
+
+@plugin "daisyui" {
+  themes: false;
+}
+
+@plugin "daisyui/theme" {
+  name: "panescale";
+  default: true;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: oklch(23% 0.021 250);
+  --color-base-200: oklch(19% 0.019 250);
+  --color-base-300: oklch(31% 0.025 250);
+  --color-base-content: oklch(93% 0.008 250);
+  --color-primary: oklch(74% 0.113 195);
+  --color-primary-content: oklch(18% 0.032 195);
+  --color-secondary: oklch(68% 0.108 258);
+  --color-secondary-content: oklch(17% 0.032 258);
+  --color-accent: oklch(80% 0.106 168);
+  --color-accent-content: oklch(19% 0.033 168);
+  --color-neutral: oklch(28% 0.023 250);
+  --color-neutral-content: oklch(90% 0.01 250);
+  --color-info: oklch(72% 0.113 244);
+  --color-info-content: oklch(17% 0.033 244);
+  --color-success: oklch(76% 0.144 155);
+  --color-success-content: oklch(18% 0.043 155);
+  --color-warning: oklch(80% 0.139 78);
+  --color-warning-content: oklch(21% 0.046 78);
+  --color-error: oklch(66% 0.191 22);
+  --color-error-content: oklch(97% 0.014 22);
+  --radius-selector: 0.25rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.375rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@theme {
+  --font-sans: "Pretendard Variable", Pretendard, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+  }
+
+  body {
+    font-variant-numeric: tabular-nums;
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: inherit;
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in oklch, var(--color-base-content) 55%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /* biome-ignore lint/complexity/noImportantStyles: must beat component transitions */
+    animation-duration: 0.01ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: must beat component transitions */
+    transition-duration: 0.01ms !important;
+  }
+}

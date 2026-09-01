@@ -1,0 +1,36 @@
+{
+  "name": "panescale",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --bun ./node_modules/vite/bin/vite.js dev",
+    "build": "bun --bun ./node_modules/vite/bin/vite.js build",
+    "preview": "bun --bun ./node_modules/vite/bin/vite.js preview",
+    "start": "bun --bun build/index.js",
+    "check": "svelte-kit sync && svelte-check --threshold error",
+    "icons": "bun scripts/build-icons.ts"
+  },
+  "devDependencies": {
+    "@iconify-json/lucide": "^1.2.128",
+    "@sveltejs/adapter-node": "^5.5.7",
+    "@sveltejs/kit": "^2.70.3",
+    "@sveltejs/vite-plugin-svelte": "^7.3.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/bun": "^1.4.0",
+    "daisyui": "^5.7.23",
+    "svelte": "^5.57.0",
+    "svelte-check": "^4.7.6",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5",
+    "vite": "^8.2.2"
+  },
+  "dependencies": {
+    "@iconify/svelte": "^5.2.2",
+    "headscale.ts": "workspace:*",
+    "pretendard": "^1.3.9",
+    "tailnet.ts": "workspace:*",
+    "tailscale.ts": "workspace:*",
+    "tailscaled.ts": "workspace:*",
+    "yaml": "^2.9.0"
+  }
+}

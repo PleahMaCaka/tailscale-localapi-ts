@@ -1,0 +1,329 @@
+{
+  "prefix": "lucide",
+  "icons": {
+    "app-window": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><rect width=\"20\" height=\"16\" x=\"2\" y=\"4\" rx=\"2\"/><path d=\"M10 4v4M2 8h20M6 4v4\"/></g>"
+    },
+    "check": {
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M20 6L9 17l-5-5\"/>"
+    },
+    "chevron-right": {
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m9 18l6-6l-6-6\"/>"
+    },
+    "circle-check": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"m16 9l-5.5 5.5L8 12\"/></g>"
+    },
+    "circle-question-mark": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3m.08 4h.01\"/></g>"
+    },
+    "circle-x": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"m15 9l-6 6m0-6l6 6\"/></g>"
+    },
+    "command": {
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3\"/>"
+    },
+    "copy": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><rect width=\"14\" height=\"14\" x=\"8\" y=\"8\" rx=\"2\" ry=\"2\"/><path d=\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\"/></g>"
+    },
+    "dot": {
+      "body": "<circle cx=\"12\" cy=\"12\" r=\"1\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"/>"
+    },
+    "ellipsis": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"1\"/><circle cx=\"19\" cy=\"12\" r=\"1\"/><circle cx=\"5\" cy=\"12\" r=\"1\"/></g>"
+    },
+    "eye": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M2.062 12.348a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 19.876 0a1 1 0 0 1 0 .696a10.75 10.75 0 0 1-19.876 0\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></g>"
+    },
+    "eye-off": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575a1 1 0 0 1 0 .696a10.8 10.8 0 0 1-1.444 2.49m-6.41-.679a3 3 0 0 1-4.242-4.242\"/><path d=\"M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 4.446-5.143M2 2l20 20\"/></g>"
+    },
+    "file-lock-2": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v1\"/><path d=\"M14 2v4a2 2 0 0 0 2 2h4\"/><rect width=\"8\" height=\"5\" x=\"2\" y=\"13\" rx=\"1\"/><path d=\"M8 13v-2a2 2 0 1 0-4 0v2\"/></g>",
+      "hidden": true
+    },
+    "file-question-mark": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2zm6-5h.01\"/><path d=\"M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3\"/></g>"
+    },
+    "globe": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 2a14.5 14.5 0 0 0 0 20a14.5 14.5 0 0 0 0-20M2 12h20\"/></g>"
+    },
+    "grip": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><circle cx=\"12\" cy=\"5\" r=\"1\"/><circle cx=\"19\" cy=\"5\" r=\"1\"/><circle cx=\"5\" cy=\"5\" r=\"1\"/><circle cx=\"12\" cy=\"12\" r=\"1\"/><circle cx=\"19\" cy=\"12\" r=\"1\"/><circle cx=\"5\" cy=\"12\" r=\"1\"/><circle cx=\"12\" cy=\"19\" r=\"1\"/><circle cx=\"19\" cy=\"19\" r=\"1\"/><circle cx=\"5\" cy=\"19\" r=\"1\"/></g>"
+    },
+    "key-round": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z\"/><circle cx=\"16.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\"/></g>"
+    },
+    "monitor-dot": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M12 17v4m10-8.693V15a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8.693M8 21h8\"/><circle cx=\"19\" cy=\"6\" r=\"3\"/></g>"
+    },
+    "plus": {
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 12h14m-7-7v14\"/>"
+    },
+    "search": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"m21 21l-4.34-4.34\"/><circle cx=\"11\" cy=\"11\" r=\"8\"/></g>"
+    },
+    "search-x": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"m13.5 8.5l-5 5m0-5l5 5\"/><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21l-4.3-4.3\"/></g>"
+    },
+    "server": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><rect width=\"20\" height=\"8\" x=\"2\" y=\"2\" rx=\"2\" ry=\"2\"/><rect width=\"20\" height=\"8\" x=\"2\" y=\"14\" rx=\"2\" ry=\"2\"/><path d=\"M6 6h.01M6 18h.01\"/></g>"
+    },
+    "server-off": {
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M7 2h13a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-5m-5 0L2.5 2.5C2 2 2 2.5 2 5v3a2 2 0 0 0 2 2zm12 7v-1a2 2 0 0 0-2-2h-1M4 14a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16.5l1-.5l.5.5l-8-8zm2 4h.01M2 2l20 20\"/>"
+    },
+    "shield": {
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\"/>"
+    },
+    "smartphone": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><rect width=\"14\" height=\"20\" x=\"5\" y=\"2\" rx=\"2\" ry=\"2\"/><path d=\"M12 18h.01\"/></g>"
+    },
+    "terminal": {
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 19h8M4 17l6-6l-6-6\"/>"
+    },
+    "triangle-alert": {
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4m0 4h.01\"/>"
+    },
+    "unplug": {
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m19 5l3-3M2 22l3-3m1.3 1.3a2.4 2.4 0 0 0 3.4 0L12 18l-6-6l-2.3 2.3a2.4 2.4 0 0 0 0 3.4Zm1.2-6.8L10 11m.5 5.5L13 14m-1-8l6 6l2.3-2.3a2.4 2.4 0 0 0 0-3.4l-2.6-2.6a2.4 2.4 0 0 0-3.4 0Z\"/>"
+    },
+    "user-plus": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M19 8v6m3-3h-6\"/></g>"
+    },
+    "users": {
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M16 3.128a4 4 0 0 1 0 7.744M22 21v-2a4 4 0 0 0-3-3.87\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/></g>"
+    },
+    "x": {
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M18 6L6 18M6 6l12 12\"/>"
+    }
+  },
+  "aliases": {
+    "activity-square": { "parent": "square-activity" },
+    "alarm-check": { "parent": "alarm-clock-check" },
+    "alarm-minus": { "parent": "alarm-clock-minus" },
+    "alarm-plus": { "parent": "alarm-clock-plus" },
+    "alert-circle": { "parent": "circle-alert" },
+    "alert-octagon": { "parent": "octagon-alert" },
+    "alert-triangle": { "parent": "triangle-alert" },
+    "align-horizonal-distribute-center": {
+      "parent": "align-horizontal-distribute-center"
+    },
+    "align-horizonal-distribute-end": {
+      "parent": "align-horizontal-distribute-end"
+    },
+    "align-horizonal-distribute-start": {
+      "parent": "align-horizontal-distribute-start"
+    },
+    "arrow-down-01": { "parent": "arrow-down-0-1" },
+    "arrow-down-10": { "parent": "arrow-down-1-0" },
+    "arrow-down-az": { "parent": "arrow-down-a-z" },
+    "arrow-down-circle": { "parent": "circle-arrow-down" },
+    "arrow-down-left-from-circle": { "parent": "circle-arrow-out-down-left" },
+    "arrow-down-left-from-square": { "parent": "square-arrow-out-down-left" },
+    "arrow-down-left-square": { "parent": "square-arrow-down-left" },
+    "arrow-down-right-from-circle": { "parent": "circle-arrow-out-down-right" },
+    "arrow-down-right-from-square": { "parent": "square-arrow-out-down-right" },
+    "arrow-down-right-square": { "parent": "square-arrow-down-right" },
+    "arrow-down-square": { "parent": "square-arrow-down" },
+    "arrow-down-za": { "parent": "arrow-down-z-a" },
+    "arrow-left-circle": { "parent": "circle-arrow-left" },
+    "arrow-left-square": { "parent": "square-arrow-left" },
+    "arrow-right-circle": { "parent": "circle-arrow-right" },
+    "arrow-right-square": { "parent": "square-arrow-right" },
+    "arrow-up-01": { "parent": "arrow-up-0-1" },
+    "arrow-up-10": { "parent": "arrow-up-1-0" },
+    "arrow-up-az": { "parent": "arrow-up-a-z" },
+    "arrow-up-circle": { "parent": "circle-arrow-up" },
+    "arrow-up-left-from-circle": { "parent": "circle-arrow-out-up-left" },
+    "arrow-up-left-from-square": { "parent": "square-arrow-out-up-left" },
+    "arrow-up-left-square": { "parent": "square-arrow-up-left" },
+    "arrow-up-right-from-circle": { "parent": "circle-arrow-out-up-right" },
+    "arrow-up-right-from-square": { "parent": "square-arrow-out-up-right" },
+    "arrow-up-right-square": { "parent": "square-arrow-up-right" },
+    "arrow-up-square": { "parent": "square-arrow-up" },
+    "arrow-up-za": { "parent": "arrow-up-z-a" },
+    "asterisk-square": { "parent": "square-asterisk" },
+    "axis-3-d": { "parent": "axis-3d" },
+    "badge-help": { "parent": "badge-question-mark" },
+    "bar-chart": { "parent": "chart-no-axes-column-increasing" },
+    "bar-chart-2": { "parent": "chart-no-axes-column" },
+    "between-horizonal-end": { "parent": "between-horizontal-end" },
+    "between-horizonal-start": { "parent": "between-horizontal-start" },
+    "book-template": { "parent": "book-dashed" },
+    "box-select": { "parent": "square-dashed" },
+    "check-circle": { "parent": "circle-check-big" },
+    "check-circle-2": { "parent": "circle-check" },
+    "check-square": { "parent": "square-check-big" },
+    "check-square-2": { "parent": "square-check" },
+    "chevron-down-circle": { "parent": "circle-chevron-down" },
+    "chevron-down-square": { "parent": "square-chevron-down" },
+    "chevron-left-circle": { "parent": "circle-chevron-left" },
+    "chevron-left-square": { "parent": "square-chevron-left" },
+    "chevron-right-circle": { "parent": "circle-chevron-right" },
+    "chevron-right-square": { "parent": "square-chevron-right" },
+    "chevron-up-circle": { "parent": "circle-chevron-up" },
+    "chevron-up-square": { "parent": "square-chevron-up" },
+    "circle-help": { "parent": "circle-question-mark" },
+    "circle-slashed": { "parent": "circle-slash-2" },
+    "clipboard-edit": { "parent": "clipboard-pen" },
+    "clipboard-signature": { "parent": "clipboard-pen-line" },
+    "code-2": { "parent": "code-xml" },
+    "code-square": { "parent": "square-code" },
+    "columns": { "parent": "columns-2" },
+    "columns-settings": { "parent": "columns-3-cog" },
+    "contact-2": { "parent": "contact-round" },
+    "curly-braces": { "parent": "braces" },
+    "divide-circle": { "parent": "circle-divide" },
+    "divide-square": { "parent": "square-divide" },
+    "dot-square": { "parent": "square-dot" },
+    "download-cloud": { "parent": "cloud-download" },
+    "edit": { "parent": "square-pen" },
+    "edit-2": { "parent": "pen" },
+    "edit-3": { "parent": "pen-line" },
+    "equal-square": { "parent": "square-equal" },
+    "file-axis-3-d": { "parent": "file-axis-3d" },
+    "file-bar-chart": { "parent": "file-chart-column-increasing" },
+    "file-bar-chart-2": { "parent": "file-chart-column" },
+    "file-cog-2": { "parent": "file-cog" },
+    "file-edit": { "parent": "file-pen" },
+    "file-line-chart": { "parent": "file-chart-line" },
+    "file-question": { "parent": "file-question-mark" },
+    "file-signature": { "parent": "file-pen-line" },
+    "file-video": { "parent": "file-play" },
+    "file-video-2": { "parent": "file-video-camera" },
+    "fingerprint": { "parent": "fingerprint-pattern" },
+    "flip-horizontal": { "parent": "square-centerline-dashed-horizontal" },
+    "flip-vertical": { "parent": "square-centerline-dashed-vertical" },
+    "folder-cog-2": { "parent": "folder-cog" },
+    "folder-edit": { "parent": "folder-pen" },
+    "fork-knife": { "parent": "utensils" },
+    "fork-knife-crossed": { "parent": "utensils-crossed" },
+    "form-input": { "parent": "rectangle-ellipsis" },
+    "function-square": { "parent": "square-function" },
+    "gantt-chart": { "parent": "chart-no-axes-gantt" },
+    "gantt-chart-square": { "parent": "square-chart-gantt" },
+    "gauge-circle": { "parent": "circle-gauge" },
+    "git-commit": { "parent": "git-commit-horizontal" },
+    "globe-2": { "parent": "earth" },
+    "grab": { "parent": "hand-grab" },
+    "grid": { "parent": "grid-3x3" },
+    "grid-2-x-2": { "parent": "grid-2x2" },
+    "grid-2-x-2-check": { "parent": "grid-2x2-check" },
+    "grid-2-x-2-plus": { "parent": "grid-2x2-plus" },
+    "grid-2-x-2-x": { "parent": "grid-2x2-x" },
+    "grid-3-x-3": { "parent": "grid-3x3" },
+    "help-circle": { "parent": "circle-question-mark" },
+    "helping-hand": { "parent": "hand-helping" },
+    "history": { "parent": "rotate-ccw-clock" },
+    "home": { "parent": "house" },
+    "ice-cream": { "parent": "ice-cream-cone" },
+    "ice-cream-2": { "parent": "ice-cream-bowl" },
+    "indent": { "parent": "indent-increase" },
+    "inspect": { "parent": "square-mouse-pointer" },
+    "jersey-pound": { "parent": "japanese-yen" },
+    "kanban-square": { "parent": "square-kanban" },
+    "kanban-square-dashed": { "parent": "square-dashed-kanban" },
+    "laptop-2": { "parent": "laptop-minimal" },
+    "layout": { "parent": "panels-top-left" },
+    "library-square": { "parent": "square-library" },
+    "loader-2": { "parent": "loader-circle" },
+    "location-edit": { "parent": "map-pin-pen" },
+    "m-square": { "parent": "square-m" },
+    "mail-question": { "parent": "mail-question-mark" },
+    "menu-square": { "parent": "square-menu" },
+    "message-circle-question": { "parent": "message-circle-question-mark" },
+    "mic-2": { "parent": "mic-vocal" },
+    "minus-circle": { "parent": "circle-minus" },
+    "minus-square": { "parent": "square-minus" },
+    "more-horizontal": { "parent": "ellipsis" },
+    "more-vertical": { "parent": "ellipsis-vertical" },
+    "mouse-pointer-square": { "parent": "square-mouse-pointer" },
+    "mouse-pointer-square-dashed": { "parent": "square-dashed-mouse-pointer" },
+    "move-3-d": { "parent": "move-3d" },
+    "outdent": { "parent": "indent-decrease" },
+    "paintbrush-2": { "parent": "paintbrush-vertical" },
+    "palmtree": { "parent": "tree-palm" },
+    "panel-bottom-inactive": { "parent": "panel-bottom-dashed" },
+    "panel-left-inactive": { "parent": "panel-left-dashed" },
+    "panel-right-inactive": { "parent": "panel-right-dashed" },
+    "panel-top-inactive": { "parent": "panel-top-dashed" },
+    "panels-left-right": { "parent": "columns-3" },
+    "panels-top-bottom": { "parent": "rows-3" },
+    "parking-circle": { "parent": "circle-parking" },
+    "parking-circle-off": { "parent": "circle-parking-off" },
+    "parking-square": { "parent": "square-parking" },
+    "parking-square-off": { "parent": "square-parking-off" },
+    "pause-circle": { "parent": "circle-pause" },
+    "pause-octagon": { "parent": "octagon-pause" },
+    "pen-box": { "parent": "square-pen" },
+    "pen-square": { "parent": "square-pen" },
+    "percent-circle": { "parent": "circle-percent" },
+    "percent-diamond": { "parent": "diamond-percent" },
+    "percent-square": { "parent": "square-percent" },
+    "pi-square": { "parent": "square-pi" },
+    "pilcrow-square": { "parent": "square-pilcrow" },
+    "play-circle": { "parent": "circle-play" },
+    "play-square": { "parent": "square-play" },
+    "plug-zap-2": { "parent": "plug-zap" },
+    "plus-circle": { "parent": "circle-plus" },
+    "plus-square": { "parent": "square-plus" },
+    "power-circle": { "parent": "circle-power" },
+    "power-square": { "parent": "square-power" },
+    "rotate-3-d": { "parent": "rotate-3d" },
+    "rows": { "parent": "rows-2" },
+    "scale-3-d": { "parent": "scale-3d" },
+    "school-2": { "parent": "university" },
+    "scissors-square": { "parent": "square-scissors" },
+    "scissors-square-dashed-bottom": {
+      "parent": "square-bottom-dashed-scissors"
+    },
+    "send-horizonal": { "parent": "send-horizontal" },
+    "shield-close": { "parent": "shield-x" },
+    "shield-question": { "parent": "shield-question-mark" },
+    "sidebar": { "parent": "panel-left" },
+    "sidebar-close": { "parent": "panel-left-close" },
+    "sidebar-open": { "parent": "panel-left-open" },
+    "sigma-square": { "parent": "square-sigma" },
+    "slash-square": { "parent": "square-slash" },
+    "sliders": { "parent": "sliders-vertical" },
+    "sort-asc": { "parent": "arrow-up-narrow-wide" },
+    "sort-desc": { "parent": "arrow-down-wide-narrow" },
+    "split-square-horizontal": { "parent": "square-split-horizontal" },
+    "split-square-vertical": { "parent": "square-split-vertical" },
+    "square-gantt": { "parent": "square-chart-gantt" },
+    "square-gantt-chart": { "parent": "square-chart-gantt" },
+    "square-kanban-dashed": { "parent": "square-dashed-kanban" },
+    "stars": { "parent": "sparkles" },
+    "stop-circle": { "parent": "circle-stop" },
+    "subtitles": { "parent": "captions" },
+    "table-config": { "parent": "columns-3-cog" },
+    "terminal-square": { "parent": "square-terminal" },
+    "test-tube-2": { "parent": "test-tube-diagonal" },
+    "text-select": { "parent": "square-dashed-text" },
+    "text-selection": { "parent": "square-dashed-text" },
+    "train": { "parent": "tram-front" },
+    "tv-2": { "parent": "tv-minimal" },
+    "unlock": { "parent": "lock-open" },
+    "unlock-keyhole": { "parent": "lock-keyhole-open" },
+    "upload-cloud": { "parent": "cloud-upload" },
+    "user-2": { "parent": "user-round" },
+    "user-check-2": { "parent": "user-round-check" },
+    "user-circle": { "parent": "circle-user" },
+    "user-circle-2": { "parent": "circle-user-round" },
+    "user-cog-2": { "parent": "user-round-cog" },
+    "user-minus-2": { "parent": "user-round-minus" },
+    "user-plus-2": { "parent": "user-round-plus" },
+    "user-square": { "parent": "square-user" },
+    "user-square-2": { "parent": "square-user-round" },
+    "user-x-2": { "parent": "user-round-x" },
+    "users-2": { "parent": "users-round" },
+    "verified": { "parent": "badge-check" },
+    "wallet-2": { "parent": "wallet-minimal" },
+    "wand-2": { "parent": "wand-sparkles" },
+    "x-circle": { "parent": "circle-x" },
+    "x-octagon": { "parent": "octagon-x" },
+    "x-square": { "parent": "square-x" }
+  },
+  "lastModified": 1788178201,
+  "width": 24,
+  "height": 24
+}
