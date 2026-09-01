@@ -2,40 +2,41 @@
 title: Risk levels
 description: How each method tells you what it can break.
 sidebar:
-  order: 2
+  order: 3
 ---
 
-Every method that changes something says so in its TSDoc, on a line that always
-looks the same:
+Every method that changes something carries one line in its TSDoc, always in
+the same shape:
 
 ```typescript
 /**
  * Expires the node's key.
  *
  * @remarks
- * Risk: **danger**. The machine drops off the tailnet and cannot rejoin
+ * Risk: **breaking**. The machine drops off the tailnet and cannot rejoin
  * until someone logs in on it again.
  */
 expire(id: string): Promise<void>
 ```
 
-Three levels, and one rule for reading them:
+Three levels, one question each:
 
-| Level | Meaning |
-| --- | --- |
-| *no risk line* | Reads. Changes nothing. |
-| **write** | Changes state. Reversible by another call. |
-| **danger** | Destroys state, or cuts something off the tailnet. |
+| Level | Question | Examples |
+| --- | --- | --- |
+| *no risk line* | Does it change anything? No. | `nodes.fetch`, `status` |
+| **write** | Can another call undo it? | `setTags`, `prefs.edit`, `setNameservers` |
+| **breaking** | Does something go offline or away? | `nodes.expire`, `nodes.delete`, `logout`, `policy.set` |
 
-The absence of a risk line is the signal for a read, so you never have to check
-a list to know that `nodes.fetch()` is safe.
+No line means a read, so you never check a list to know `nodes.fetch()` is
+safe. The line shows up in three places: on hover in your editor, in the
+generated [API reference](../../api/), and in a grep of the source.
 
 ## Why not namespaces
 
-An earlier version put writes under `client.write.*` and destructive calls
-under `client.danger.*`. It made risky calls obvious in a diff, and it made
-every call site ugly. The docs carry the same information, your editor shows
-them on hover, and the method names stay flat:
+An earlier version put writes under `client.write.*` and breaking calls under
+`client.danger.*`. It made risky calls obvious in a diff, and it made every
+call site ugly. The TSDoc carries the same information and the method names
+stay flat:
 
 ```typescript
 await control.nodes.fetch()
@@ -43,24 +44,36 @@ await control.nodes.setTags(id, ["tag:server"])
 await control.nodes.delete(id)
 ```
 
-## Finding the dangerous calls in a codebase
+## Finding the breaking calls in a codebase
 
 The wording is fixed on purpose, so it greps:
 
 ```bash
-rg 'Risk: \*\*danger\*\*' node_modules/headscale.ts/src
+rg 'Risk: \*\*breaking\*\*' node_modules/@tailnet/headscale/src
 ```
 
 ## The same convention in tests
 
-Each package splits its suite the same way, and each tier is gated harder than
-the last:
+`@tailnet/core` and `@tailnet/tailscale` have unit tests only. The two packages that
+talk to a live server split their suites into the same three tiers, each gated
+harder than the last:
+
+| Tier | Runs when |
+| --- | --- |
+| `tests/unit` | Always. No server needed. |
+| `tests/live` | A control plane or daemon is reachable. Daemon writes also need `TAILSCALE_TEST_WRITE=1`. |
+| `tests/breaking` | `bun run test:breaking`, and the matching flag is set. |
 
 ```bash
-bun test tests/unit          # no server needed
-bun test tests/live          # needs a control plane or daemon
-HEADSCALE_TEST_DANGER=1 bun test tests/destructive
+bun run test                                            # unit and live
+
+export HEADSCALE_TEST_BREAKING=1                        # @tailnet/headscale
+export TAILSCALE_TEST_WRITE=1 TAILSCALE_TEST_BREAKING=1 # @tailnet/tailscaled
+bun run test:breaking
 ```
 
-Point them at a [throwaway tailnet](/guides/local-tailnet/) before enabling the
-last one.
+The `TAILSCALE_TEST_*` flags gate `@tailnet/tailscaled`, the daemon client. The
+Tailscale control plane is never tested against a live tailnet.
+
+Point the live tiers at a [throwaway tailnet](../../guides/local-tailnet/)
+before enabling the last one.

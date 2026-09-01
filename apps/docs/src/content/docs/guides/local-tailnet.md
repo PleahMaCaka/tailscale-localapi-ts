@@ -1,6 +1,6 @@
 ---
 title: A throwaway tailnet
-description: Boot headscale and tailscaled on loopback so destructive calls stay harmless.
+description: Boot headscale and tailscaled on loopback so breaking calls stay harmless.
 ---
 
 Testing `nodes.delete()` against the tailnet you actually use is a bad
@@ -11,6 +11,7 @@ headscale control server and a userspace `tailscaled`, both bound to
 ```bash
 nix develop
 tailnet up
+bun run dev
 ```
 
 ```
@@ -21,28 +22,19 @@ tailnet up
   api key  ~/.local/state/tailscale.ts/apikey
 ```
 
-`tailnet up` also issues a Headscale API key. Pull everything into the current
-shell with:
-
-```bash
-eval "$(tailnet env)"
-```
-
-That exports `TAILSCALE_LOCALAPI_SOCKET`, `HEADSCALE_URL` and
-`HEADSCALE_API_KEY`, which is all any package or app in the repo needs:
-
-```bash
-bun run test
-bun run debug
-bun run dev
-```
+Both daemons keep running in the background after the command returns. The
+first run creates a Headscale user named `dev`, joins the daemon as
+`dev-node`, and issues an API key. Inside the dev shell `tailnet up` also
+exports `TAILSCALE_LOCALAPI_SOCKET`, `HEADSCALE_URL` and
+`HEADSCALE_API_KEY`, so tests and apps find the tailnet with no further setup.
+From any other shell, `eval "$(tailnet env)"` does the same.
 
 ## Commands
 
 | Command | What it does |
 | --- | --- |
-| `tailnet up` | Start both daemons, join the node, issue an API key |
-| `tailnet env` | Print export lines for the current shell |
+| `tailnet up` | Start both daemons, join the node, issue an API key. Safe to repeat. |
+| `tailnet env` | Print export lines for a shell |
 | `tailnet status` | Show both daemons and the node state |
 | `tailnet down` | Stop both daemons, keep the state |
 | `tailnet reset` | Stop both daemons and delete every key, node and database |
@@ -51,7 +43,8 @@ bun run dev
 
 Everything goes in `$XDG_STATE_HOME/tailscale.ts`, never in the repo. That is
 not tidiness: unix sockets cannot be created on a Windows drive mounted into
-WSL, so a checkout under `/mnt/c` would have no working socket at all.
+WSL, so a checkout under `/mnt/c` would have no working socket at all. Set
+`TAILSCALE_TS_DEV_DIR` to move it.
 
 ## The config is not the default
 
@@ -67,13 +60,14 @@ derp:
   urls: []
 ```
 
-## Running destructive tests
+## Running breaking tests
 
 Once the tailnet above is up, nothing in it is worth protecting:
 
 ```bash
-HEADSCALE_TEST_DANGER=1 bun test tests/destructive
-TAILSCALE_TEST_WRITE=1 TAILSCALE_TEST_DANGER=1 bun test tests/destructive
+export HEADSCALE_TEST_BREAKING=1
+export TAILSCALE_TEST_WRITE=1 TAILSCALE_TEST_BREAKING=1
+bun run test:breaking
 ```
 
-`tailnet up` re-joins the node afterwards.
+The daemon tests log the node out along the way. `tailnet up` re-joins it.

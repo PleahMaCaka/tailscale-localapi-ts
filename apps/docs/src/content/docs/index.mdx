@@ -1,35 +1,35 @@
 ---
-title: tailnet.ts
+title: tailnet
 description: One TypeScript client for Tailscale and Headscale control planes, plus a client for the local daemon.
 template: splash
 hero:
-  tagline: Same code against Tailscale or Headscale. A separate, honest client for the daemon on this machine. Every call that can hurt says so where you read it.
+  tagline: Same code against Tailscale or Headscale. A separate client for the daemon on this machine. Every call that can hurt carries a risk line where you read it.
   actions:
     - text: Get started
-      link: /start/installation/
+      link: start/getting-started/
       icon: right-arrow
-    - text: Reference
-      link: /reference/tailnet/
+    - text: API reference
+      link: api/
       variant: minimal
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components"
 
 <CardGrid stagger>
-  <Card title="One contract, two backends" icon="random">
-    `tailnet.ts` defines what a control plane can do. `headscale.ts` and
-    `tailscale.ts` implement it. Swap the backend, keep the code.
+  <Card title="One contract, two control planes" icon="random">
+    `Headscale` and `Tailscale` both extend `Tailnet`. Write against
+    `Tailnet`, construct whichever one you have.
   </Card>
-  <Card title="Risk lives in the docs" icon="warning">
-    No namespaces to remember. Each method's `@remarks` says whether it reads,
-    writes or destroys, and your editor shows it on hover.
+  <Card title="Risk lives next to the method" icon="warning">
+    Read, write or breaking. Each method's `@remarks` names it, your editor
+    shows it on hover, and the API reference here is built from the same text.
   </Card>
   <Card title="Grounded in real servers" icon="approve-check">
     Headscale types came from a running server, Tailscale types from its
-    OpenAPI schema. Where the two APIs disagree, the docs say so.
+    OpenAPI schema. The package pages list where the two APIs disagree.
   </Card>
   <Card title="Test without your tailnet" icon="rocket">
     The Nix dev shell boots a throwaway headscale and tailscaled on loopback,
-    so destructive calls never touch a network you care about.
+    so breaking calls never touch a network you care about.
   </Card>
 </CardGrid>
