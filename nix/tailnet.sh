@@ -121,8 +121,6 @@ up)
   echo "  socket   $SOCKET"
   echo "  state    $(backend_state)"
   echo "  api key  $API_KEY_FILE"
-  echo
-  echo "  eval \"\$(tailnet env)\"   to export it into this shell"
   ;;
 env)
   echo "export TAILSCALE_LOCALAPI_SOCKET=$SOCKET"

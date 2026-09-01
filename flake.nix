@@ -1,5 +1,5 @@
 {
-  description = "tailscale.ts monorepo";
+  description = "tailnet monorepo";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -57,9 +57,16 @@
               HEADSCALE_API_KEY="$(cat "$TAILSCALE_TS_DEV_DIR/apikey")"
               export HEADSCALE_API_KEY
             fi
-            echo "tailscale.ts dev shell"
+            tailnet() {
+              command tailnet "$@" || return
+              case "''${1:-up}" in
+                up) eval "$(command tailnet env)" ;;
+                reset) unset HEADSCALE_API_KEY ;;
+              esac
+            }
+            export -f tailnet
+            echo "tailnet dev shell"
             echo "  tailnet up      start an isolated headscale + tailscaled on loopback"
-            echo "  tailnet env     print export lines for this shell"
             echo "  tailnet status  show the local tailnet state"
             echo "  tailnet down    stop both daemons"
             echo "  tailnet reset   stop and delete all local tailnet state"
