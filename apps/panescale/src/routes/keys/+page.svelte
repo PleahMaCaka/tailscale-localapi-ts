@@ -126,7 +126,7 @@ function afterSubmit(close: () => void) {
 
 {#if data.apiKeys.length || data.perUser}
   <Section
-    tone="danger"
+    tone="breaking"
     title="API keys"
     hint="Each one is full administrative access to this control plane."
   >
@@ -246,7 +246,7 @@ function afterSubmit(close: () => void) {
 <Dialog
   open={issuingApiKey}
   onclose={() => (issuingApiKey = false)}
-  tone="danger"
+  tone="breaking"
   title="Issue an API key"
   description="This grants full administrative access to the control plane."
 >

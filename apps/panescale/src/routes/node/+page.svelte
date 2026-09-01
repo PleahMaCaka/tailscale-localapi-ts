@@ -145,7 +145,7 @@ const stateTone: Record<string, string> = {
     </form>
   </Section>
 
-  <Section tone="danger" title="Danger zone" hint="These take this machine off the tailnet.">
+  <Section tone="breaking" title="Breaking" hint="These take this machine off the tailnet.">
     <div class="flex flex-wrap gap-3">
       <ConfirmButton
         variant="button"

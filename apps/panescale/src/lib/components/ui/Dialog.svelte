@@ -15,7 +15,7 @@ let {
   open?: boolean
   title: string
   description?: string
-  tone?: "plain" | "danger"
+  tone?: "plain" | "breaking"
   size?: "md" | "lg"
   onclose?: () => void
   children: Snippet
@@ -37,7 +37,7 @@ $effect(() => {
     class:max-w-xl={size === "md"}
     class:max-w-2xl={size === "lg"}
     class:border-base-300={tone === "plain"}
-    class:border-error={tone === "danger"}
+    class:border-error={tone === "breaking"}
   >
     <header
       class="flex items-start justify-between gap-4 border-b border-base-300 p-5"
@@ -45,7 +45,7 @@ $effect(() => {
       <div class="min-w-0">
         <h2
           class="truncate text-base font-semibold tracking-tight"
-          class:text-error={tone === "danger"}
+          class:text-error={tone === "breaking"}
         >
           {title}
         </h2>

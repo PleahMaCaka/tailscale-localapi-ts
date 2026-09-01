@@ -39,7 +39,7 @@ let open = $state(false)
   </button>
 {/if}
 
-<Dialog {open} onclose={() => (open = false)} title={label} tone="danger" description={consequence}>
+<Dialog {open} onclose={() => (open = false)} title={label} tone="breaking" description={consequence}>
   <p class="text-sm text-base-content/70">
     This cannot be undone from here.
   </p>

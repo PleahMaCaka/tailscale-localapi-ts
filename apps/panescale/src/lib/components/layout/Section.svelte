@@ -10,7 +10,7 @@ let {
 }: {
   title: string
   hint?: string
-  tone?: "plain" | "danger"
+  tone?: "plain" | "breaking"
   children: Snippet
   action?: Snippet
 } = $props()
@@ -19,13 +19,13 @@ let {
 <section
   class="rounded-box border bg-base-100"
   class:border-base-300={tone === "plain"}
-  class:border-error={tone === "danger"}
+  class:border-error={tone === "breaking"}
 >
   <header
     class="flex flex-wrap items-start justify-between gap-3 border-b border-base-300 px-5 py-4"
   >
     <div>
-      <h2 class="text-sm font-semibold" class:text-error={tone === "danger"}>
+      <h2 class="text-sm font-semibold" class:text-error={tone === "breaking"}>
         {title}
       </h2>
       {#if hint}
