@@ -1,0 +1,86 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun run check
+
+      - run: |
+          for package in packages/*; do
+            bunx tsc --noEmit -p "$package"
+          done
+
+      - run: bun run --filter panescale check
+
+      - uses: actions/cache@v6
+        with:
+          path: |
+            apps/panescale/.svelte-kit
+            apps/panescale/node_modules/.vite
+            apps/docs/.astro
+            apps/docs/node_modules/.astro
+          key: build-${{ runner.os }}-${{ hashFiles('bun.lock') }}-${{ github.sha }}
+          restore-keys: build-${{ runner.os }}-${{ hashFiles('bun.lock') }}-
+
+      - run: bun run --filter panescale build
+
+      - run: bun run --filter docs build
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: DeterminateSystems/nix-installer-action@v22
+
+      - uses: nix-community/cache-nix-action@v7
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('flake.nix', 'flake.lock', 'nix/**') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          gc-max-store-size-linux: 2G
+          purge: true
+          purge-prefixes: nix-${{ runner.os }}-
+          purge-created: 0
+          purge-primary-key: never
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+
+      - run: nix develop --command bash -c 'bun install --frozen-lockfile'
+
+      - run: nix develop --command bash -c 'tailnet up && bun run test'
+
+      - run: nix develop --command bash -c 'tailnet up && bun run test:breaking'
+        env:
+          HEADSCALE_TEST_BREAKING: "1"
+          TAILSCALE_TEST_WRITE: "1"
+          TAILSCALE_TEST_BREAKING: "1"
