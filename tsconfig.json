@@ -1,7 +1,5 @@
 {
-  "extends": "@tsconfig/bun/tsconfig.json",
-  "compilerOptions": {
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true
-  }
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [{ "path": "./packages/tailscale.ts" }]
 }

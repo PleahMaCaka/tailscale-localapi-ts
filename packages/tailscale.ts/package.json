@@ -1,0 +1,29 @@
+{
+  "name": "tailscale.ts",
+  "version": "0.1.0",
+  "description": "Tailscale control plane backend for tailnet.ts",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "tailscale",
+    "tailnet",
+    "control-plane",
+    "api",
+    "typescript"
+  ],
+  "scripts": {
+    "test": "bun test tests/unit"
+  },
+  "dependencies": {
+    "tailnet.ts": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

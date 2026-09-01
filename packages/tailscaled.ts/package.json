@@ -1,0 +1,30 @@
+{
+  "name": "tailscaled.ts",
+  "version": "0.2.0",
+  "description": "TypeScript client for the tailscaled LocalAPI",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "tailscale",
+    "localapi",
+    "tailnet",
+    "vpn",
+    "typescript",
+    "bun"
+  ],
+  "scripts": {
+    "test": "bun test tests/unit tests/live",
+    "test:write": "bun test tests/live",
+    "test:danger": "bun test tests/destructive",
+    "debug": "bun scripts/debug.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "headscale.ts",
+  "version": "0.1.0",
+  "description": "Headscale control plane backend for tailnet.ts",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "headscale",
+    "tailscale",
+    "tailnet",
+    "control-plane",
+    "typescript"
+  ],
+  "scripts": {
+    "test": "bun test tests/unit tests/live",
+    "test:danger": "bun test tests/destructive"
+  },
+  "dependencies": {
+    "tailnet.ts": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}
