@@ -1,6 +1,6 @@
 {
   "name": "@tailnet/tailcat",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Client for the tailcat CLI: WireGuard tunnels between two machines with no control plane",
   "license": "MIT",
   "type": "module",

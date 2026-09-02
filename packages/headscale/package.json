@@ -1,6 +1,6 @@
 {
   "name": "@tailnet/headscale",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Headscale control plane client",
   "license": "MIT",
   "type": "module",
