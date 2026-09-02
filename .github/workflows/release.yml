@@ -54,7 +54,7 @@ jobs:
 
       - run: |
           for package in packages/*; do
-            (cd "$package" && npm version "$VERSION" --no-git-tag-version --allow-same-version)
+            (cd "$package" && npm pkg set "version=$VERSION")
           done
           bun install
 
