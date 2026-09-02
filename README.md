@@ -3,6 +3,9 @@
 TypeScript clients for Tailscale, Headscale, the daemon on this machine, and
 tailcat.
 
+[Documentation](https://pleahmacaka.github.io/tailnet/start/getting-started/) ·
+[API reference](https://pleahmacaka.github.io/tailnet/api/)
+
 ```typescript
 import { Headscale } from "@tailnet/headscale"
 
@@ -48,6 +51,6 @@ tailnet up
 bun run dev
 ```
 
-Docs: https://pleahmacaka.github.io/tailscale-localapi-ts
+## License
 
-MIT
+[MIT](./LICENSE)

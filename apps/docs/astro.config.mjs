@@ -20,7 +20,7 @@ export default defineConfig({
         {
           icon: "github",
           label: "GitHub",
-          href: `https://github.com/${owner ?? "pleahmacaka"}/${repository ?? "tailscale-localapi-ts"}`
+          href: `https://github.com/${owner ?? "pleahmacaka"}/${repository ?? "tailnet"}`
         }
       ],
       plugins: [
