@@ -1,6 +1,6 @@
 {
   "name": "@tailnet/tailscaled",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "LocalAPI client for the tailscaled daemon running on this machine",
   "license": "MIT",
   "type": "module",
