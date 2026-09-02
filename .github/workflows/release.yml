@@ -78,7 +78,8 @@ jobs:
               if [ "$(npm pkg get 'dependencies.@tailnet/core' | tr -d '"')" = "workspace:*" ]; then
                 npm pkg set "dependencies.@tailnet/core=$VERSION"
               fi
-              npm publish --access public
+              npm publish --access public 2>&1 | tee publish.log || grep -q "previously published" publish.log
+              rm -f publish.log
             )
           done
 
