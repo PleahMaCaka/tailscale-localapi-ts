@@ -14,6 +14,7 @@ concurrency:
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
   ci:
@@ -37,11 +38,19 @@ jobs:
         with:
           bun-version: latest
 
-      - uses: actions/cache@v6
+      - uses: actions/setup-node@v7
         with:
-          path: ~/.bun/install/cache
-          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
-          restore-keys: bun-${{ runner.os }}-
+          node-version: 24
+          package-manager-cache: false
+
+      - run: npm install -g npm@latest
+
+      - run: |
+          if [ -n "$NPM_TOKEN" ]; then
+            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+          fi
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - run: |
           for package in packages/*; do
@@ -58,10 +67,19 @@ jobs:
 
       - run: |
           for package in core headscale tailscale tailscaled tailcat; do
-            (cd "packages/$package" && bun publish --access public --tolerate-republish)
+            (
+              cd "packages/$package"
+              name=$(npm pkg get name | tr -d '"')
+              if npm view "$name@$VERSION" version >/dev/null 2>&1; then
+                echo "$name@$VERSION is already on npm"
+                exit 0
+              fi
+              if [ "$(npm pkg get 'dependencies.@tailnet/core' | tr -d '"')" = "workspace:*" ]; then
+                npm pkg set "dependencies.@tailnet/core=$VERSION"
+              fi
+              npm publish --access public
+            )
           done
-        env:
-          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - uses: softprops/action-gh-release@v3
         with:

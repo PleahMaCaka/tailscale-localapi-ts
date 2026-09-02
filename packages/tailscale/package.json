@@ -25,5 +25,11 @@
   },
   "devDependencies": {
     "@types/bun": "latest"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pleahmacaka/tailnet.git",
+    "directory": "packages/tailscale"
+  },
+  "homepage": "https://pleahmacaka.github.io/tailnet"
 }
