@@ -46,13 +46,6 @@ jobs:
       - run: npm install -g npm@latest
 
       - run: |
-          if [ -n "$NPM_TOKEN" ]; then
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-          fi
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - run: |
           for package in packages/*; do
             (cd "$package" && npm pkg set "version=$VERSION")
           done
@@ -71,13 +64,15 @@ jobs:
           for package in core headscale tailscale tailscaled tailcat; do
             (
               cd "packages/$package"
-              name=$(npm pkg get name | tr -d '"')
+              name=$(node -p 'require("./package.json").name')
               if npm view "$name@$VERSION" version >/dev/null 2>&1; then
                 echo "$name@$VERSION is already on npm"
                 exit 0
               fi
-              if [ "$(npm pkg get 'dependencies.@tailnet/core' | tr -d '"')" = "workspace:*" ]; then
-                npm pkg set "dependencies.@tailnet/core=$VERSION"
+              node -e 'const p = require("./package.json"); if (p.dependencies?.["@tailnet/core"] === "workspace:*") { p.dependencies["@tailnet/core"] = process.env.VERSION; require("fs").writeFileSync("package.json", JSON.stringify(p, null, 2)) }'
+              if grep -q "workspace:" package.json; then
+                echo "workspace protocol left in $name" >&2
+                exit 1
               fi
               npm publish --access public 2>&1 | tee publish.log || grep -q "previously published" publish.log
               rm -f publish.log
