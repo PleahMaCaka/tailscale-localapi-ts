@@ -1,13 +1,13 @@
 ---
 title: "@tailnet/core"
-description: The shared contract every control plane implements.
+description: The shared interface every control plane implements.
 sidebar:
   order: 1
 ---
 
-`Tailnet` is the abstract class `Headscale` and `Tailscale` extend. Type
-against it and either one fits. You never install this package yourself:
-everything in it is re-exported from `@tailnet/headscale` and
+`Tailnet` is the abstract class that `Headscale` and `Tailscale` extend.
+Code typed against `Tailnet` accepts either. This package is not installed
+directly. Everything in it is re-exported from `@tailnet/headscale` and
 `@tailnet/tailscale`.
 
 ```typescript
@@ -44,13 +44,14 @@ await control.nodes.expire(id)
 await control.nodes.delete(id)
 ```
 
-Both control planes normalise onto one
-[TailnetNode](../../api/tailnet/core/interfaces/tailnetnode/). Its `raw` field
-is the server's own object, for anything the shared shape drops.
+Both control planes return the same
+[TailnetNode](../../api/tailnet/core/interfaces/tailnetnode/) type. Its
+`raw` field holds the server's original object, including fields the shared
+type omits.
 
-**Renaming is optional.** Tailscale has no rename endpoint: a device's name
-comes from the machine itself. So `rename` is optional on the interface and
-`canRename` tells you whether it is there.
+`rename` is optional. Tailscale has no rename endpoint, because a device's
+name comes from the machine. `canRename` reports whether `rename` is
+implemented.
 
 ```typescript
 if (control.canRename) {
@@ -58,10 +59,9 @@ if (control.canRename) {
 }
 ```
 
-**Routes take two steps.** A route only carries traffic once the node
-advertises it *and* an administrator enables it. `advertisedRoutes` is set on
-the machine and cannot be changed through any API; `setRoutes` controls
-`enabledRoutes`.
+Routes have two sides. A route carries traffic only when the node advertises
+it and an administrator enables it. `advertisedRoutes` is set on the machine
+and cannot be changed through any API. `setRoutes` controls `enabledRoutes`.
 
 ## Users
 
@@ -69,23 +69,24 @@ the machine and cannot be changed through any API; `setRoutes` controls
 await control.users.fetch()
 ```
 
-Read-only in the shared contract, because Tailscale users come from an identity
-provider. `Headscale` owns its user records and adds create, rename and delete
-on its own `users`.
+Users are read-only in the shared interface, because Tailscale users come
+from an identity provider. `Headscale` adds create, rename and delete on its
+own `users` property.
 
 ## Keys
 
 ```typescript
 const key = await control.keys.create({ userId, reusable: true, tags: ["tag:edge"] })
-key.secret   // the only time you get it
+key.secret   // returned only at creation
 
 await control.keys.fetch(userId)
 await control.keys.revoke(key)
 ```
 
-`revoke` takes the whole key rather than an id, because the two control planes
-identify keys differently: Tailscale by id, Headscale by owner plus secret.
-Revoking blocks new registrations only; machines already on the tailnet stay.
+`revoke` takes the whole key object instead of an id, because the two
+control planes identify keys differently: Tailscale by id, Headscale by
+owner and secret. Revoking a key blocks new registrations. Machines already
+registered with it stay on the tailnet.
 
 ## Policy
 
@@ -94,15 +95,15 @@ const current = await control.policy.fetch()
 await control.policy.set(document, current.version)
 ```
 
-`version` is Tailscale's `ETag`, sent back as `If-Match` so a concurrent edit
-is rejected instead of silently overwritten. Headscale has no such token and
-ignores the argument. `set` is the whole tailnet's firewall in one call: both
-control planes reject a malformed document, neither rejects a valid but wrong
-one.
+`version` is Tailscale's `ETag`, sent back as `If-Match` so a concurrent
+edit is rejected instead of overwritten. Headscale has no version token and
+ignores the argument. `set` replaces the whole policy. Both control planes
+reject a malformed document. Neither rejects a valid document with wrong
+rules.
 
 ## Errors
 
-Everything throws a subclass of
+All errors are subclasses of
 [TailnetError](../../api/tailnet/core/classes/tailneterror/).
 
 | Class | Raised when |

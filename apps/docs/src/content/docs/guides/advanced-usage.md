@@ -1,14 +1,14 @@
 ---
 title: Advanced usage
-description: Writing against Tailnet, narrowing to one control plane, and the edges worth knowing.
+description: Writing against Tailnet, narrowing to one control plane, error handling, and daemon options.
 sidebar:
   order: 1
 ---
 
-## Narrow when you need the extras
+## Narrowing to one control plane
 
-Write against `Tailnet` for the shared work. When a code path needs something
-only one control plane has, narrow with `instanceof`:
+Write against `Tailnet` for shared operations. When a code path needs a
+method that exists on only one control plane, narrow with `instanceof`:
 
 ```typescript
 import { Headscale, type Tailnet } from "@tailnet/headscale"
@@ -27,11 +27,11 @@ function requireHeadscale(control: Tailnet): Headscale {
 }
 ```
 
-`control.name` is `"headscale"` or `"tailscale"` when a string is enough,
-and `control.canRename` covers the one optional method on the shared
-contract.
+`control.name` is `"headscale"` or `"tailscale"`. `control.canRename`
+reports whether `nodes.rename` is available, the one optional method on the
+shared interface.
 
-## Pick the control plane from the environment
+## Choosing the control plane from the environment
 
 ```typescript
 function fromEnv(): Tailnet {
@@ -49,10 +49,10 @@ function fromEnv(): Tailnet {
 }
 ```
 
-## Handle errors by class
+## Error classes
 
-Everything a control plane throws extends `TailnetError`, so one `instanceof`
-separates "the server said no" from "your code is wrong":
+Every error thrown by a control plane client extends `TailnetError`, so one
+`instanceof` check separates API errors from other exceptions:
 
 ```typescript
 import { ConflictError, NotFoundError, TailnetError } from "@tailnet/headscale"
@@ -66,13 +66,14 @@ try {
 }
 ```
 
-`ServerUnreachableError` carries the `url` it tried, `ApiError` the `status`.
-The daemon client has its own tree under `TailscaledError`.
+`ServerUnreachableError` has a `url` field and `ApiError` has `status`. The
+daemon client has a separate hierarchy under `TailscaledError`.
 
-## Edit the policy without clobbering someone else
+## Policy versioning
 
 Tailscale returns an `ETag` with the policy and rejects a write whose
-`If-Match` is stale. Always round-trip `version`:
+`If-Match` header is stale. Pass `version` from the fetched document back to
+`set`:
 
 ```typescript
 const current = await control.policy.fetch()
@@ -82,18 +83,18 @@ try {
   await control.policy.set(next, current.version)
 } catch (error) {
   if (error instanceof ConflictError) {
-    // someone else changed the policy first; fetch and try again
+    // the policy changed since fetch; fetch again and retry
   }
 }
 ```
 
-Headscale has no token and ignores the argument, so the same code is correct
-on both.
+Headscale has no version token and ignores the argument, so the same code
+works on both.
 
-## Keys on Headscale need a user
+## Listing keys on Headscale
 
-Headscale scopes pre-auth keys to a user and `keys.fetch()` throws without
-one. To list every key on either control plane:
+Headscale scopes pre-auth keys to a user, and `keys.fetch()` throws when
+called without a user id. To list all keys on either control plane:
 
 ```typescript
 async function allKeys(control: Tailnet) {
@@ -108,10 +109,10 @@ async function allKeys(control: Tailnet) {
 }
 ```
 
-## Reach for `raw` when the shared shape is not enough
+## Raw server objects
 
-Every node, user and key keeps the server's own object on `raw`. Cast it to
-the package's type when you need a field the shared shape drops:
+Every node, user and key has the server's original object on `raw`. Cast it
+to the package's type to read fields the shared type does not include:
 
 ```typescript
 import type { HeadscaleNode } from "@tailnet/headscale"
@@ -131,10 +132,11 @@ new Tailscale({ apiKey, baseUrl: "http://127.0.0.1:9999/api/v2" })
 
 The unit tests in `packages/tailscale/tests/unit` stub `fetch` this way.
 
-## The daemon
+## Daemon client
 
-**Log in without a browser on the machine.** `login()` returns at once; the
-URL to open shows up on `status()`:
+### Login without a browser
+
+`login()` returns immediately. The URL to open is reported by `status()`:
 
 ```typescript
 await daemon.login()
@@ -143,29 +145,33 @@ const { authUrl } = await daemon.status(false)
 console.log(authUrl)
 ```
 
-With an auth key there is no prompt at all:
+With an auth key there is no interactive step:
 
 ```typescript
 await daemon.start({ authKey })
 ```
 
-**Change one preference.** Pass only the fields you mean to change; the
-`Set` mask the daemon requires is built for you:
+### Editing one preference
+
+Pass only the fields to change. The `Set` mask the daemon requires is
+generated from the keys in the patch:
 
 ```typescript
 await daemon.prefs.edit({ exitNodeId: peer.id, exitNodeAllowLanAccess: true })
 ```
 
-**Force the transport.** `useCli: true` shells out to `tailscale debug
-localapi` anywhere, which is the way to reach a daemon whose socket needs
-root while the CLI is allowed through:
+### Forcing the CLI transport
+
+`useCli: true` runs `tailscale debug localapi` on every platform. Use it when
+the socket requires root but the CLI is permitted:
 
 ```typescript
 const daemon = new Tailscaled({ useCli: true })
 ```
 
-**Guard before calling.** `isRunning()` swallows the connection error so a
-status page can show "daemon stopped" instead of throwing:
+### Checking that the daemon is running
+
+`isRunning()` returns `false` instead of throwing when the connection fails:
 
 ```typescript
 if (!(await daemon.isRunning())) return "stopped"

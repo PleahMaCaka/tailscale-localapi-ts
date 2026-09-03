@@ -149,7 +149,7 @@ export class Tailscaled {
    * @remarks
    * Risk: **breaking**. The node key is dropped and the backend lands in
    * `NeedsLogin`. On a headless machine reached only over Tailscale, this
-   * removes your way back in.
+   * cuts off remote access.
    */
   logout(): Promise<void> {
     return this.transport.send("logout", jsonInit("POST"))
@@ -159,8 +159,8 @@ export class Tailscaled {
    * Clears stored credentials entirely.
    *
    * @remarks
-   * Risk: **breaking**. Harsher than {@link Tailscaled.logout}: re-authentication
-   * starts from scratch rather than reusing a saved profile.
+   * Risk: **breaking**. Unlike {@link Tailscaled.logout}, the saved profile is
+   * also dropped, so the next login starts from scratch.
    */
   resetAuth(): Promise<void> {
     return this.transport.send("reset-auth", jsonInit("POST"))

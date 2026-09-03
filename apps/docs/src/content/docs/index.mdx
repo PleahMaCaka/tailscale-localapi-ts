@@ -1,9 +1,9 @@
 ---
 title: tailnet
-description: One TypeScript client for Tailscale and Headscale control planes, plus a client for the local daemon.
+description: TypeScript clients for Tailscale and Headscale control planes, the local tailscaled daemon, and tailcat.
 template: splash
 hero:
-  tagline: Same code against Tailscale or Headscale. A separate client for the daemon on this machine. Every call that can hurt carries a risk line where you read it.
+  tagline: TypeScript clients for Tailscale and Headscale control planes, the local tailscaled daemon, and tailcat. Writes and breaking calls are marked in TSDoc.
   actions:
     - text: Get started
       link: start/getting-started/
@@ -16,20 +16,21 @@ hero:
 import { Card, CardGrid } from "@astrojs/starlight/components"
 
 <CardGrid stagger>
-  <Card title="One contract, two control planes" icon="random">
-    `Headscale` and `Tailscale` both extend `Tailnet`. Write against
-    `Tailnet`, construct whichever one you have.
+  <Card title="One interface for both control planes" icon="random">
+    `Headscale` and `Tailscale` extend `Tailnet`. Code written against
+    `Tailnet` works with either.
   </Card>
-  <Card title="Risk lives next to the method" icon="warning">
-    Read, write or breaking. Each method's `@remarks` names it, your editor
-    shows it on hover, and the API reference here is built from the same text.
+  <Card title="Risk levels in TSDoc" icon="warning">
+    Each method that writes or breaks something has a `Risk:` line in its
+    `@remarks`. Editors show it on hover and the API reference includes it.
   </Card>
-  <Card title="Grounded in real servers" icon="approve-check">
-    Headscale types came from a running server, Tailscale types from its
-    OpenAPI schema. The package pages list where the two APIs disagree.
+  <Card title="Types from real responses" icon="approve-check">
+    Headscale types were captured from a running server. Tailscale types
+    come from the published OpenAPI schema. The package pages list where the
+    two APIs differ.
   </Card>
-  <Card title="Test without your tailnet" icon="rocket">
-    The Nix dev shell boots a throwaway headscale and tailscaled on loopback,
-    so breaking calls never touch a network you care about.
+  <Card title="Local test tailnet" icon="rocket">
+    The Nix dev shell starts a headscale server and a tailscaled on
+    loopback, so breaking tests never reach a real network.
   </Card>
 </CardGrid>

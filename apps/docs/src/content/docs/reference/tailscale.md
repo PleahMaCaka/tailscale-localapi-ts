@@ -1,6 +1,6 @@
 ---
 title: "@tailnet/tailscale"
-description: The Tailscale control plane, and the DNS API Headscale has no answer for.
+description: Tailscale control plane client and its Tailscale-only methods.
 sidebar:
   order: 3
 ---
@@ -11,22 +11,21 @@ import { Tailscale } from "@tailnet/tailscale"
 const control = new Tailscale({ apiKey: process.env.TAILSCALE_API_KEY! })
 ```
 
-The key's own tailnet is used unless you pass `tailnet: "example.com"`.
-`baseUrl` overrides
-`https://api.tailscale.com/api/v2` for a proxy or a mock. Full signatures on
-[Tailscale](../../api/tailnet/tailscale/classes/tailscale/).
+Requests go to the tailnet that owns the API key unless
+`tailnet: "example.com"` is passed. `baseUrl` replaces
+`https://api.tailscale.com/api/v2` for a proxy or a mock server. Full
+signatures: [Tailscale](../../api/tailnet/tailscale/classes/tailscale/).
 
 :::caution
-Written against Tailscale's published OpenAPI schema and covered by unit tests
-with a stubbed transport. Unlike Headscale it is not exercised against a live
-server in this repository, because that would mean pointing tests at a
-production tailnet.
+This package is written against Tailscale's published OpenAPI schema and
+tested with a stubbed transport. It is not tested against a live Tailscale
+server in this repository, since that would require a production tailnet.
 :::
 
 ## DNS
 
-Tailnet-wide DNS settings, which Headscale keeps in a config file with no API
-in front of them.
+Tailnet-wide DNS settings. Headscale has no API for these; it reads them
+from its config file.
 
 ```typescript
 await control.dns.nameservers()
@@ -37,20 +36,21 @@ await control.dns.searchPaths()
 await control.dns.setSearchPaths(["example.com"])
 ```
 
-Each write applies to every device on the tailnet at once.
+Each write applies to every device on the tailnet.
 
 ## Device authorization
 
-Only meaningful on a tailnet with device approval turned on.
+Applies only to tailnets with device approval enabled.
 
 ```typescript
 await control.nodes.setAuthorized(id, true)
 await control.nodes.routes(id)
 ```
 
-## Full user records
+## Detailed user records
 
-The shared `users.fetch()` returns the common shape. Tailscale tracks more:
+The shared `users.fetch()` returns the common type. `users.detailed()`
+returns Tailscale's full user record:
 
 ```typescript
 for (const user of await control.users.detailed()) {
@@ -60,16 +60,16 @@ for (const user of await control.users.detailed()) {
 
 ## Keys
 
-`keys.create()` always issues a pre-authorized auth key, so machines joining
-with it skip device approval. `userId` is ignored: the key belongs to whoever
-owns the API token. `description` is stored, which Headscale cannot do.
+`keys.create()` always creates a pre-authorized auth key, so machines that
+join with it skip device approval. `userId` is ignored. The key belongs to
+the owner of the API token. `description` is stored. Headscale does not
+support key descriptions.
 
-Listing costs one request per key. Tailscale's list endpoint returns ids only,
-so `keys.fetch()` follows up with a request per key to fill in capabilities.
-Fine for the handful of keys a tailnet usually has; worth knowing before you
-call it in a loop.
+`keys.fetch()` makes one request per key. Tailscale's list endpoint returns
+ids only, so the client fetches each key to fill in its capabilities. Avoid
+calling it in a loop on tailnets with many keys.
 
-## Where it differs from Headscale
+## Differences from Headscale
 
 | | Tailscale | Headscale |
 | --- | --- | --- |
@@ -81,9 +81,9 @@ call it in a loop.
 | User records | read only | full CRUD |
 | API keys | admin console | `apiKeys` |
 
-## Raw shapes
+## Raw types
 
-`raw` carries the device, user or key as the API returned it:
+`raw` holds the device, user or key as the API returned it:
 [TailscaleDevice](../../api/tailnet/tailscale/interfaces/tailscaledevice/),
 [TailscaleUser](../../api/tailnet/tailscale/interfaces/tailscaleuser/),
 [TailscaleKey](../../api/tailnet/tailscale/interfaces/tailscalekey/).

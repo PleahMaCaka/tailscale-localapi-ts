@@ -84,7 +84,7 @@ export interface KeyOps {
    *
    * @remarks
    * Risk: **write**. Anyone holding the secret can add a machine to the
-   * tailnet with the tags baked in.
+   * tailnet with the key's tags.
    */
   create(options: CreateAuthKeyOptions): Promise<AuthKey>
 

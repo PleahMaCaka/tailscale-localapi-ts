@@ -5,8 +5,8 @@ import type { DeviceRoutes, TailscaleDevice } from "../types"
 /**
  * Tailscale's device endpoints.
  *
- * There is no rename here on purpose: a device's name comes from the machine
- * itself, so {@link NodeOps.rename} is left unimplemented.
+ * {@link NodeOps.rename} is not implemented: a device's name comes from the
+ * machine itself.
  */
 export class TailscaleDeviceOps implements NodeOps {
   constructor(

@@ -1,11 +1,11 @@
 ---
 title: PaneScale
-description: A Headplane-style admin interface that works against either control plane.
+description: Admin interface for Headscale or Tailscale, built on the tailnet packages.
 ---
 
-PaneScale is the app in `apps/panescale`. It covers the same ground as
-Headplane, with one difference: it is written against `Tailnet`, so the same
-screens drive a Headscale server or a Tailscale tailnet.
+PaneScale is the admin app in `apps/panescale`. It covers the same features
+as Headplane. It is written against `Tailnet`, so the same screens work with
+a Headscale server or a Tailscale tailnet.
 
 ```bash
 nix develop
@@ -19,16 +19,15 @@ It serves on `http://127.0.0.1:4270`.
 
 | Page | Contents |
 | --- | --- |
-| Machines | Every node, led by its address. Search, filter, a row menu for each action, and a details dialog |
-| Users | Who owns what, with create, rename and delete where the control plane allows it |
+| Machines | All nodes, with search, filter, a per-row action menu and a details dialog |
+| Users | Users and their nodes. Create, rename and delete on Headscale |
 | Access control | The policy document, validated by the server before it is stored |
 | DNS | Tailnet name, MagicDNS, nameservers, search domains |
 | Keys | Auth keys per user, and Headscale API keys |
-| This node | The local daemon: status, prefs, exit node, and the calls that take it offline |
+| This node | Local daemon status, prefs, exit node, logout and shutdown |
 
-The last one is the odd one out on purpose. It talks to `@tailnet/tailscaled` over
-the unix socket, not to the control plane, and it is the only page that works
-with no API key configured.
+**This node** uses `@tailnet/tailscaled` over the unix socket instead of
+the control plane. It is the only page that works without an API key.
 
 ## Configuration
 
@@ -45,47 +44,46 @@ TAILSCALE_TAILNET=example.com                       # default: -
 TAILSCALE_API_KEY=...
 ```
 
-Whichever key is set decides the control plane, and Headscale wins when both
-are. The local daemon socket comes from `TAILSCALE_LOCALAPI_SOCKET` as usual.
+The control plane is chosen by which key is set. If both are set, Headscale
+is used. The daemon socket path comes from `TAILSCALE_LOCALAPI_SOCKET`.
 
-## What changes per control plane
+## Differences per control plane
 
-The interface hides what the control plane cannot do rather than failing at
-the click:
+Controls the current control plane does not support are hidden:
 
-- **Rename** disappears on Tailscale, which takes a device's name from the
-  machine itself.
-- **Move owner** and the user create/rename/delete controls appear only for
-  Headscale.
-- **DNS** reads and writes Tailscale's API, or Headscale's config file. The
-  config-file case is labelled, warns when the file is not writable, and
-  reminds you that Headscale reads it only at startup.
+- **Rename** is hidden on Tailscale, where a device's name comes from the
+  machine.
+- **Move owner** and the user create, rename and delete controls appear only
+  for Headscale.
+- **DNS** uses Tailscale's API or Headscale's config file. The config-file
+  mode is labelled, warns when the file is not writable, and notes that
+  Headscale reads the file only at startup.
 - **API keys** appear only for Headscale.
 
-## How it is put together
+## Interface conventions
 
-Nothing edits inline in a list. Every row carries a menu, every action opens a
-dialog, and a created key appears in a dialog with a copy button because the
-secret is shown once.
+Lists have no inline editing. Each row has a menu and each action opens a
+dialog. A newly created key is shown in a dialog with a copy button, since
+the secret is returned only once.
 
-Rows lead with the machine's tailnet address rather than its name, since that
-is what stays stable and what people actually scan for. Figures are tabular so
-those columns line up without a monospace face. Tags take a colour derived from
-the tag string, so the same tag reads the same on every screen.
+Rows start with the node's tailnet address, which is stable where names are
+not. Numbers use tabular figures so columns align. Tag colours are derived
+from the tag string, so a tag has the same colour on every screen.
 
-Icons are compiled in rather than fetched from the Iconify API, so the
-interface renders on an isolated network. Run `bun run icons` after adding one.
+Icons are bundled at build time instead of fetched from the Iconify API, so
+the app works on an isolated network. Run `bun run icons` after adding an
+icon.
 
-## Risk shows in the styling
+## Risk styling
 
-The three levels from the [risk levels](../../start/risk-levels/) page carry
-into the interface. Read-only panels are plain, panels that write are outlined
-in warning, and breaking actions sit in a panel outlined in error with a
-confirmation dialog in front of every button.
+The three [risk levels](../../start/risk-levels/) map to panel styles.
+Read-only panels are plain. Panels with write actions have a warning outline.
+Breaking actions are in a panel with an error outline, and each button opens
+a confirmation dialog.
 
 ## Deployment
 
-Built with `adapter-node`, and it has to run on Bun because the local daemon
+The app is built with `adapter-node` and must run on Bun, because the daemon
 socket is reached through Bun's `fetch({ unix })`.
 
 ```bash
@@ -93,5 +91,5 @@ bun run build
 bun run start
 ```
 
-Bind it to loopback. It has no authentication of its own, and anything that can
-reach it holds your control plane's API key.
+Bind it to loopback. The app has no authentication, and any client that can
+reach it can use the control plane API key.

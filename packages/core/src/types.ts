@@ -37,7 +37,7 @@ export interface AuthKey {
   id: string
   /**
    * The secret. Both control planes return it only when the key is created,
-   * so this is `null` for keys that were merely listed.
+   * so this is `null` for keys returned by `fetch`.
    */
   secret: string | null
   reusable: boolean

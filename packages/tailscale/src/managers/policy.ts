@@ -3,7 +3,7 @@ import type { Http, PolicyDocument, PolicyOps } from "@tailnet/core"
 /**
  * The tailnet policy file.
  *
- * Tailscale hands out an `ETag` with the document and accepts it back as
+ * Tailscale returns an `ETag` with the document and accepts it back as
  * `If-Match`, so a concurrent edit is rejected instead of silently
  * overwritten. That token travels as {@link PolicyDocument.version}.
  */

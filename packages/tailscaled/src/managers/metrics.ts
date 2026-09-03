@@ -3,8 +3,7 @@ import type { Transport } from "../transport"
 /**
  * Diagnostic dumps from the daemon.
  *
- * Every method here returns plain text, not JSON. Parsing them as JSON is the
- * usual mistake.
+ * Every method here returns plain text, not JSON.
  */
 export class MetricsManager {
   constructor(private readonly transport: Transport) {}

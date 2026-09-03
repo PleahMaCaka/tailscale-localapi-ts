@@ -1,6 +1,6 @@
 ---
 title: "@tailnet/headscale"
-description: The Headscale control plane, and what only it can do.
+description: Headscale control plane client and its Headscale-only methods.
 sidebar:
   order: 2
 ---
@@ -11,14 +11,15 @@ import { Headscale } from "@tailnet/headscale"
 const control = new Headscale({ url: "http://127.0.0.1:8080", apiKey })
 ```
 
-`url` is the server root; the `/api/v1` prefix is added for you. Everything
-in the [shared contract](../tailnet/) works. What follows is what Headscale
-adds, with full signatures on
+`url` is the server root. The client adds the `/api/v1` prefix. All methods
+of the [shared interface](../tailnet/) are available. This page covers the
+methods specific to Headscale. Full signatures:
 [Headscale](../../api/tailnet/headscale/classes/headscale/).
 
 ## Renaming a node
 
-Headscale stores a given name per node, so unlike Tailscale it can rename.
+Headscale stores a given name per node, so nodes can be renamed. Tailscale
+cannot.
 
 ```typescript
 await control.nodes.rename(id, "build-box")
@@ -32,11 +33,12 @@ await control.nodes.moveToUser(nodeId, userId)
 await control.nodes.register(userId, nodeKey)
 ```
 
-Ownership decides which ACL rules apply, so moving a node can change access
-in both directions. `register` completes a machine that is waiting with a
-node key, the API form of `headscale nodes register`.
+Ownership determines which ACL rules apply, so moving a node can change its
+access in both directions. `register` completes registration for a machine
+waiting with a node key. It is the API equivalent of
+`headscale nodes register`.
 
-## Writing user records
+## Users
 
 ```typescript
 await control.users.create({ name: "ci" })
@@ -46,64 +48,61 @@ await control.users.byName("ci")
 await control.users.delete(id)
 ```
 
-`delete` fails while the user still owns nodes. Move or delete those first.
-Renaming breaks ACL rules that name the old user, so change the policy in the
-same step.
+`delete` fails while the user still owns nodes. Move or delete the nodes
+first. Renaming a user breaks ACL rules that reference the old name, so
+update the policy at the same time.
 
 ## API keys
 
-Keys that grant access to Headscale itself. Tailscale manages these through its
-admin console instead.
+Keys for the Headscale API itself. Tailscale has no equivalent endpoint; its
+API keys are managed in the admin console.
 
 ```typescript
-await control.apiKeys.fetch()          // prefixes only, never secrets
+await control.apiKeys.fetch()          // prefixes only, no secrets
 await control.apiKeys.create(seconds)  // returned once, default 90 days
 await control.apiKeys.expire(prefix)
 await control.apiKeys.delete(prefix)
 ```
 
-Expiring the key you are calling with cuts you off mid-session.
+Expiring the key the client is using makes every following request fail.
 
-## Keys are scoped per user
+## Pre-auth keys
 
-Headscale calls them pre-auth keys and every one belongs to a user, so
-`keys.fetch()` needs an id:
+Every pre-auth key belongs to a user, so `keys.fetch()` requires a user id:
 
 ```typescript
 await control.keys.fetch(userId)
 await control.keys.create({ userId, reusable: true, tags: ["tag:edge"] })
 ```
 
-Calling `keys.fetch()` with no argument throws rather than guessing. A key
-created without `expirySeconds` lasts 24 hours.
+`keys.fetch()` throws when called without an id. A key created without
+`expirySeconds` expires after 24 hours.
 
-## Two traps worth knowing
+## Known pitfalls
 
-**Filtering nodes by user takes a name, not an id.** It is the one endpoint in
-the whole API that does, and passing an id fails with `user not found`.
+**`nodes.byUser` takes a user name, not an id.** It is the only endpoint in
+the API that filters by name. Passing an id fails with `user not found`.
 
 ```typescript
 await control.nodes.byUser("dev")    // works
 await control.nodes.byUser("1")      // "user not found"
 ```
 
-**The policy endpoints need database mode.** With Headscale's default file
-mode the server owns the policy and `policy.fetch()` fails. Set it in the
-config:
+**The policy endpoints require database mode.** With Headscale's default
+file mode the policy endpoints fail. Set the mode in the config:
 
 ```yaml
 policy:
   mode: database
 ```
 
-This is the same condition that makes Headplane show the Headscale
-configuration as read-only.
+Headplane shows the Headscale configuration as read-only for the same reason.
 
-## Raw shapes
+## Raw types
 
-`raw` on every node, user and key is the server's own object:
+`raw` on every node, user and key holds the server's original object:
 [HeadscaleNode](../../api/tailnet/headscale/interfaces/headscalenode/),
 [HeadscaleUser](../../api/tailnet/headscale/interfaces/headscaleuser/),
 [HeadscalePreAuthKey](../../api/tailnet/headscale/interfaces/headscalepreauthkey/).
-These came from a running server, not from the protobuf definitions, so the
-field names are what the JSON gateway actually emits.
+These types were captured from a running server, not derived from the
+protobuf definitions, so the field names match what the JSON gateway emits.

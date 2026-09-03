@@ -1,7 +1,7 @@
 import type { KeyOps, NodeOps, PolicyOps, UserOps } from "./ops"
 
 /**
- * What every control plane looks like from the outside.
+ * The interface shared by every control plane.
  *
  * `Headscale` and `Tailscale` extend this, so code written against
  * `Tailnet` runs on either. Anything only one of them can do lives on the
